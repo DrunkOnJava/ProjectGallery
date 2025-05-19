@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Netlify Projects Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(180deg, #0a0f1b 0%, #050a15 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Subtle gradient mesh */
+        .header::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(ellipse at top, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom right, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            opacity: 0.7;
+            z-index: 0;
+        }
+        
+        /* Professional grid pattern */
+        .header::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+        
+        /* Subtle floating dots */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            border-radius: 50%;
+            animation: float-subtle 30s linear infinite;
+        }
+        
+        @keyframes float-subtle {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+        
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            position: relative;
+            animation: fade-in 0.8s ease-out;
+        }
+        
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            animation: expand 1.5s ease-out;
+        }
+        
+        @keyframes expand {
+            0% { width: 0; }
+            100% { width: 80px; }
+        }
+        
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            animation: fade-in 0.8s ease-out;
+            animation-delay: 0.2s;
+            animation-fill-mode: backwards;
+        }
+        
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header-badges {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fade-in 0.8s ease-out;
+            animation-delay: 0.4s;
+            animation-fill-mode: backwards;
+        }
+        
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-badge::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .header-badge:hover::before {
+            opacity: 1;
+        }
+        
+        .header-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255,255,255,0.15);
+        }
+        
+        .header-badge:nth-child(1) .header-badge-icon { color: #60a5fa; }
+        .header-badge:nth-child(2) .header-badge-icon { color: #34d399; }
+        .header-badge:nth-child(3) .header-badge-icon { color: #fbbf24; }
+        .header-badge:nth-child(4) .header-badge-icon { color: #a78bfa; }
+        
+        .header-badge-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+        
+        .header-badge:hover .header-badge-icon {
+            transform: scale(1.1);
+        }
+        
+        .header-badge-number {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 1.125rem;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .header-badge-label {
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 3.5rem;
+            }
+            .header p {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Controls */
+        .controls {
+            max-width: 900px;
+            margin: 0 auto 2.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fade-in 0.8s ease-out;
+            animation-delay: 0.6s;
+            animation-fill-mode: backwards;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+            min-width: 250px;
+        }
+
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-button {
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .filter-button:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .filter-button.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+        
+        /* Multi-select mode */
+        .multi-select-controls {
+            display: none;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .multi-select-controls.active {
+            display: flex;
+        }
+        
+        .select-mode-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #ef4444;
+            border: none;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .select-mode-button:hover {
+            background-color: #dc2626;
+        }
+        
+        .hide-selected-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #10b981;
+            border: none;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .hide-selected-button:hover {
+            background-color: #059669;
+        }
+        
+        .cancel-select-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #6b7280;
+            border: none;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cancel-select-button:hover {
+            background-color: #4b5563;
+        }
+        
+        .selected-count {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        /* Selected cards */
+        .project-card.selected {
+            outline: 3px solid #ef4444;
+            outline-offset: -3px;
+        }
+        
+        .project-card.selecting {
+            cursor: pointer;
+        }
+        
+        .project-card.selecting:hover {
+            outline: 3px solid rgba(239, 68, 68, 0.5);
+            outline-offset: -3px;
+        }
+
+        /* Masonry Gallery */
+        .gallery {
+            max-width: 1600px;
+            margin: 0 auto;
+            column-width: 320px;
+            column-gap: 1.5rem;
+        }
+
+        /* Project Cards with 5 sizes */
+        .project-card {
+            background-color: #1a1a1a;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid #333;
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Card sizes */
+        .project-card.tiny { height: 180px; }
+        .project-card.small { height: 250px; }
+        .project-card.medium { height: 320px; }
+        .project-card.large { height: 400px; }
+        .project-card.xlarge { height: 500px; }
+        
+        /* Icon cards - all square */
+        .project-card.icon-square { 
+            height: 280px; 
+            width: 280px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        /* Double width for featured projects */
+        .project-card.featured {
+            column-span: 2;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: #06b6d4;
+        }
+
+        .project-card.editing {
+            outline: 3px solid #06b6d4;
+        }
+
+        /* Image Container */
+        .image-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* Live iframe preview */
+        .project-iframe {
+            position: absolute;
+            width: 400%;
+            height: 400%;
+            border: none;
+            transform: scale(0.25);
+            transform-origin: 0 0;
+            pointer-events: none;
+            background: #0a0a0a;
+        }
+
+        .project-screenshot {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+
+        .project-screenshot.fit-contain {
+            object-fit: contain;
+            padding: 1rem;
+        }
+        
+        /* Icon-specific styling */
+        .project-card.icon-square .project-screenshot {
+            object-fit: cover;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .project-screenshot.fit-fill {
+            object-fit: fill;
+        }
+
+        .project-card.editing .project-screenshot {
+            cursor: grab;
+        }
+
+        .project-card.editing .project-screenshot.dragging {
+            cursor: grabbing;
+        }
+
+        .project-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #64748b;
+            font-size: 3rem;
+        }
+
+        /* Loading spinner for iframes */
+        .iframe-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #06b6d4;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Overlay */
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            pointer-events: none;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .project-card.editing .project-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .project-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .project-card.large .project-name,
+        .project-card.xlarge .project-name {
+            font-size: 1.5rem;
+        }
+
+        .project-url {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            word-break: break-all;
+            opacity: 0.8;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .action-button.primary {
+            background: #06b6d4;
+            border-color: #06b6d4;
+        }
+
+        .action-button.primary:hover {
+            background: #0891b2;
+        }
+
+        .action-button.danger {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .action-button.danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Remove button */
+        .remove-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 32px;
+            height: 32px;
+            background: rgba(220, 38, 38, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .project-card:hover .remove-button {
+            opacity: 1;
+        }
+
+        .remove-button:hover {
+            background: rgba(185, 28, 28, 0.9);
+            transform: scale(1.1);
+        }
+
+        /* Edit Panel */
+        .edit-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: #1e1e1e;
+            border-left: 1px solid #333;
+            transition: right 0.3s;
+            overflow-y: auto;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .edit-panel.active {
+            right: 0;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-panel:hover {
+            color: #fff;
+        }
+
+        .edit-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .edit-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-input {
+            width: 100%;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .zoom-slider {
+            width: 100%;
+            margin-top: 0.5rem;
+            appearance: none;
+            height: 6px;
+            background: #2a2a2a;
+            outline: none;
+            border-radius: 3px;
+        }
+
+        .zoom-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #06b6d4;
+            cursor: pointer;
+        }
+
+        /* Size selector */
+        .size-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .size-button {
+            padding: 0.5rem;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .size-button:hover {
+            border-color: #06b6d4;
+        }
+
+        .size-button.active {
+            background: #06b6d4;
+            border-color: #06b6d4;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Refresh button */
+        .refresh-button {
+            padding: 0.5rem 1rem;
+            background: #06b6d4;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .refresh-button:hover {
+            background: #0891b2;
+        }
+
+        /* Auto-size badge */
+        .auto-size-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: rgba(6,182,212,0.9);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-card:hover .auto-size-badge {
+            opacity: 1;
+        }
+
+        .stats {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #6b7280;
+        }
+
+        .stats-number {
+            color: #06b6d4;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        /* Rounded corners */
+        .project-card.rounded-corners {
+            border-radius: 24px;
+        }
+
+        .project-card.rounded-corners .image-container {
+            border-radius: 24px;
+        }
+        
+        /* Debugging Tools */
+        .debugging-tools {
+            max-width: 1600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 1rem;
+        }
+        
+        .debugging-tools h3 {
+            color: #06b6d4;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .debug-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #262626;
+            border: 1px solid #444;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .debug-button:hover {
+            background-color: #333;
+            border-color: #06b6d4;
+        }
+        
+        #debugInfo {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #262626;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: #06b6d4;
+            white-space: pre-wrap;
+            display: none;
+        }
+        
+        #debugInfo.active {
+            display: block;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gallery {
+                column-width: 280px;
+                column-gap: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="particles">
+            <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 25%; animation-delay: 5s;"></div>
+            <div class="particle" style="left: 40%; animation-delay: 10s;"></div>
+            <div class="particle" style="left: 55%; animation-delay: 15s;"></div>
+            <div class="particle" style="left: 70%; animation-delay: 20s;"></div>
+            <div class="particle" style="left: 85%; animation-delay: 25s;"></div>
+        </div>
+        <div class="header-content">
+            <h1>Project Gallery</h1>
+            <p>Live previews of all deployed applications and custom app icons</p>
+            <div class="header-badges">
+                <div class="header-badge">
+                    <svg class="header-badge-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 7H7v6h6V7z" />
+                        <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="header-badge-number" id="totalBadge">0</span>
+                    <span class="header-badge-label">Total</span>
+                </div>
+                <div class="header-badge">
+                    <svg class="header-badge-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="header-badge-number" id="successBadge">0</span>
+                    <span class="header-badge-label">Active</span>
+                </div>
+                <div class="header-badge">
+                    <svg class="header-badge-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="header-badge-number" id="hiddenBadge">0</span>
+                    <span class="header-badge-label">Hidden</span>
+                </div>
+                <div class="header-badge">
+                    <svg class="header-badge-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="header-badge-number" id="iconBadge">0</span>
+                    <span class="header-badge-label">Icons</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search projects..."
+            id="searchInput"
+        />
+        <button class="filter-button active" id="filterAll" onclick="filterProjects('all')">All</button>
+        <button class="filter-button" id="filterSuccess" onclick="filterProjects('success')">Success</button>
+        <button class="filter-button" id="filterFailed" onclick="filterProjects('failed')">Failed</button>
+        <button class="select-mode-button" onclick="toggleSelectMode()">Select Multiple</button>
+        
+        <div class="multi-select-controls" id="multiSelectControls">
+            <span class="selected-count">Selected: <span id="selectedCount">0</span></span>
+            <button class="hide-selected-button" onclick="hideSelected()">Hide Selected</button>
+            <button class="cancel-select-button" onclick="cancelSelectMode()">Cancel</button>
+        </div>
+        <button class="filter-button" onclick="showHiddenProjects()">Show Hidden</button>
+    </div>
+
+    <div class="gallery" id="gallery">
+        <div class="loading">Loading projects...</div>
+    </div>
+
+    <div class="edit-panel" id="editPanel">
+        <button class="close-panel" onclick="closeEditPanel()">×</button>
+        <h2>Edit Project Display</h2>
+        <div id="editContent"></div>
+    </div>
+    
+    <div class="debugging-tools" id="debuggingTools">
+        <h3>Debugging Tools</h3>
+        <button class="debug-button" onclick="clearAllHidden()">Clear All Hidden Projects</button>
+        <button class="debug-button" onclick="resetLocalStorage()">Reset All Settings</button>
+        <button class="debug-button" onclick="exportSettings()">Export Settings</button>
+        <div id="debugInfo"></div>
+    </div>
+
+    <script>
+        let projects = [];
+        let appIcons = [];
+        let hiddenProjects = [];
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let currentEditingId = null;
+        let currentEditingType = null;
+        let selectMode = false;
+        let selectedCards = new Set();
+
+        // Initialize project states from localStorage
+        let projectStates = {};
+        const savedStates = localStorage.getItem('projectStates');
+        if (savedStates) {
+            projectStates = JSON.parse(savedStates);
+        }
+
+        // Empty initially - user will manually hide projects
+        const lockedHiddenProjects = [];
+        
+        // App icons will be loaded from config file
+        let APP_ICONS = [];
+
+        // Load hidden projects from localStorage or use locked defaults
+        const savedHidden = localStorage.getItem('hiddenProjects');
+        if (savedHidden) {
+            hiddenProjects = JSON.parse(savedHidden);
+        } else {
+            hiddenProjects = [...lockedHiddenProjects];
+            localStorage.setItem('hiddenProjects', JSON.stringify(hiddenProjects));
+        }
+
+        // Featured projects (these will get larger sizes)
+        const featuredProjects = ['griffin-radcliffe', 'porfolioplus', 'mindblitz', 'administ', 'material-dashboard-react'];
+
+        // Projects that work well with tiny size
+        const tinyProjects = ['file-fuse', 'timewell', 'tango-mango', 'steroidbase'];
+
+        // Determine optimal size based on project characteristics
+        function determineOptimalSize(project) {
+            const savedState = projectStates[project.name];
+            if (savedState && savedState.size) {
+                return savedState.size; // Use saved size preference
+            }
+
+            // Check if it's featured
+            if (featuredProjects.includes(project.name)) {
+                return 'large';
+            }
+
+            // Check if it's suitable for tiny
+            if (tinyProjects.includes(project.name)) {
+                return 'tiny';
+            }
+
+            // Randomize for variety with weighted distribution
+            const sizeWeights = {
+                tiny: 0.15,
+                small: 0.25,
+                medium: 0.35,
+                large: 0.20,
+                xlarge: 0.05
+            };
+
+            const random = Math.random();
+            let cumulative = 0;
+            
+            for (const [size, weight] of Object.entries(sizeWeights)) {
+                cumulative += weight;
+                if (random <= cumulative) {
+                    return size;
+                }
+            }
+
+            return 'medium'; // fallback
+        }
+
+        // Embedded site data to avoid CORS issues
+        const SITE_DATA = [
+          {
+            "name": "scintillating-torrone-19b562",
+            "url": "https://scintillating-torrone-19b562.netlify.app",
+            "screenshot": "screenshots/scintillating-torrone-19b562.png",
+            "status": "success"
+          },
+          {
+            "name": "porfolioplus",
+            "url": "https://porfolioplus.netlify.app",
+            "screenshot": "screenshots/porfolioplus.png",
+            "status": "success"
+          },
+          {
+            "name": "luxury-frangollo-11cf88",
+            "url": "https://luxury-frangollo-11cf88.netlify.app",
+            "screenshot": "screenshots/luxury-frangollo-11cf88.png",
+            "status": "success"
+          },
+          {
+            "name": "bejewelled-crostata-2737b4",
+            "url": "https://bejewelled-crostata-2737b4.netlify.app",
+            "screenshot": "screenshots/bejewelled-crostata-2737b4.png",
+            "status": "success"
+          },
+          {
+            "name": "material-dashboard-react",
+            "url": "https://material-dashboard-react-1746753948.netlify.app",
+            "screenshot": "screenshots/material-dashboard-react.png",
+            "status": "success"
+          },
+          {
+            "name": "loquacious-begonia-80c757",
+            "url": "https://loquacious-begonia-80c757.netlify.app",
+            "screenshot": "screenshots/loquacious-begonia-80c757.png",
+            "status": "success"
+          },
+          {
+            "name": "silly-lily-66b5e2",
+            "url": "https://silly-lily-66b5e2.netlify.app",
+            "screenshot": "screenshots/silly-lily-66b5e2.png",
+            "status": "success"
+          },
+          {
+            "name": "mindblitz",
+            "url": "https://mindblitz.netlify.app",
+            "screenshot": "screenshots/mindblitz.png",
+            "status": "success"
+          },
+          {
+            "name": "file-fuse",
+            "url": "https://file-fuse.netlify.app",
+            "screenshot": "screenshots/file-fuse.png",
+            "status": "success"
+          },
+          {
+            "name": "preeminent-hotteok-79f13e",
+            "url": "https://preeminent-hotteok-79f13e.netlify.app",
+            "screenshot": "screenshots/preeminent-hotteok-79f13e.png",
+            "status": "success"
+          },
+          {
+            "name": "magical-bubblegum-faf4ee",
+            "url": "https://magical-bubblegum-faf4ee.netlify.app",
+            "screenshot": "screenshots/magical-bubblegum-faf4ee.png",
+            "status": "success"
+          },
+          {
+            "name": "steady-phoenix-93bfd1",
+            "url": "https://steady-phoenix-93bfd1.netlify.app",
+            "screenshot": "screenshots/steady-phoenix-93bfd1.png",
+            "status": "success"
+          },
+          {
+            "name": "administ",
+            "url": "https://administ.netlify.app",
+            "screenshot": "screenshots/administ.png",
+            "status": "success"
+          },
+          {
+            "name": "brokenfileflattener",
+            "url": "https://brokenfileflattener.netlify.app",
+            "screenshot": "screenshots/brokenfileflattener.png",
+            "status": "success"
+          },
+          {
+            "name": "timewell",
+            "url": "https://timewell.netlify.app",
+            "screenshot": "screenshots/timewell.png",
+            "status": "success"
+          },
+          {
+            "name": "sweet-nougat-1df434",
+            "url": "https://sweet-nougat-1df434.netlify.app",
+            "screenshot": "screenshots/sweet-nougat-1df434.png",
+            "status": "success"
+          },
+          {
+            "name": "griffin-radcliffe-analytics",
+            "url": "https://griffin-radcliffe-analytics.netlify.app",
+            "screenshot": "screenshots/griffin-radcliffe-analytics.png",
+            "status": "success"
+          },
+          {
+            "name": "tango-mango",
+            "url": "https://tango-mango.netlify.app",
+            "screenshot": "screenshots/tango-mango.png",
+            "status": "success"
+          },
+          {
+            "name": "griffin-radcliffe",
+            "url": "https://drunkonjava.com",
+            "screenshot": "screenshots/griffin-radcliffe.png",
+            "status": "success"
+          },
+          {
+            "name": "myfitlifepro",
+            "url": "https://myfitlifepro.netlify.app",
+            "screenshot": "screenshots/myfitlifepro.png",
+            "status": "success"
+          },
+          {
+            "name": "ephemeral-alfajores-3f1147",
+            "url": "https://ephemeral-alfajores-3f1147.netlify.app",
+            "screenshot": "screenshots/ephemeral-alfajores-3f1147.png",
+            "status": "success"
+          },
+          {
+            "name": "tiny-youtiao-dd447a",
+            "url": "https://tiny-youtiao-dd447a.netlify.app",
+            "screenshot": "screenshots/tiny-youtiao-dd447a.png",
+            "status": "success"
+          },
+          {
+            "name": "adorable-empanada-10d2a4",
+            "url": "https://adorable-empanada-10d2a4.netlify.app",
+            "screenshot": "screenshots/adorable-empanada-10d2a4.png",
+            "status": "success"
+          },
+          {
+            "name": "melodious-bienenstitch",
+            "url": "https://melodious-bienenstitch-1857e8.netlify.app",
+            "screenshot": "screenshots/melodious-bienenstitch.png",
+            "status": "success"
+          },
+          {
+            "name": "ryan-maloney",
+            "url": "https://ryan-maloney.netlify.app",
+            "screenshot": "screenshots/ryan-maloney.png",
+            "status": "success"
+          },
+          {
+            "name": "lease-dispute-dc",
+            "url": "https://lease-dispute-dc.netlify.app",
+            "screenshot": "screenshots/lease-dispute-dc.png",
+            "status": "success"
+          },
+          {
+            "name": "stately-kelpie-a559bb",
+            "url": "https://stately-kelpie-a559bb.netlify.app",
+            "screenshot": null,
+            "status": "failed",
+            "error": "Screenshot failed"
+          },
+          {
+            "name": "rococo-starburst-882bb6",
+            "url": "https://rococo-starburst-882bb6.netlify.app",
+            "screenshot": "screenshots/rococo-starburst-882bb6.png",
+            "status": "success"
+          },
+          {
+            "name": "bucolic-griffin-9cf2cb",
+            "url": "https://bucolic-griffin-9cf2cb.netlify.app",
+            "screenshot": "screenshots/bucolic-griffin-9cf2cb.png",
+            "status": "success"
+          },
+          {
+            "name": "scintillating-youtiao",
+            "url": "https://scintillating-youtiao-a64c89.netlify.app",
+            "screenshot": "screenshots/scintillating-youtiao.png",
+            "status": "success"
+          },
+          {
+            "name": "melodious-melba-4d2edd",
+            "url": "https://melodious-melba-4d2edd.netlify.app",
+            "screenshot": "screenshots/melodious-melba-4d2edd.png",
+            "status": "success"
+          },
+          {
+            "name": "thehintdropper",
+            "url": "https://thehintdropper.netlify.app",
+            "screenshot": "screenshots/thehintdropper.png",
+            "status": "success"
+          },
+          {
+            "name": "resonant-baklava-be6eb1",
+            "url": "https://resonant-baklava-be6eb1.netlify.app",
+            "screenshot": "screenshots/resonant-baklava-be6eb1.png",
+            "status": "success"
+          },
+          {
+            "name": "benevolent-flan-f2c21d",
+            "url": "https://benevolent-flan-f2c21d.netlify.app",
+            "screenshot": "screenshots/benevolent-flan-f2c21d.png",
+            "status": "success"
+          },
+          {
+            "name": "famous-dragon-b0cae6",
+            "url": "https://famous-dragon-b0cae6.netlify.app",
+            "screenshot": "screenshots/famous-dragon-b0cae6.png",
+            "status": "success"
+          },
+          {
+            "name": "jolly-mooncake-7d55df",
+            "url": "https://jolly-mooncake-7d55df.netlify.app",
+            "screenshot": "screenshots/jolly-mooncake-7d55df.png",
+            "status": "success"
+          },
+          {
+            "name": "friendly-daifuku-78fd5b",
+            "url": "https://friendly-daifuku-78fd5b.netlify.app",
+            "screenshot": "screenshots/friendly-daifuku-78fd5b.png",
+            "status": "success"
+          },
+          {
+            "name": "bejewelled-kataifi-88b1d9",
+            "url": "https://bejewelled-kataifi-88b1d9.netlify.app",
+            "screenshot": "screenshots/bejewelled-kataifi-88b1d9.png",
+            "status": "success"
+          },
+          {
+            "name": "steroidbase",
+            "url": "https://steroidbase.netlify.app",
+            "screenshot": "screenshots/steroidbase.png",
+            "status": "success"
+          },
+          {
+            "name": "coruscating-cat-3a8117",
+            "url": "https://coruscating-cat-3a8117.netlify.app",
+            "screenshot": "screenshots/coruscating-cat-3a8117.png",
+            "status": "success"
+          },
+          {
+            "name": "remarkable-arithmetic",
+            "url": "https://remarkable-arithmetic-edf3e0.netlify.app",
+            "screenshot": "screenshots/remarkable-arithmetic.png",
+            "status": "success"
+          },
+          {
+            "name": "macostoolbox",
+            "url": "https://macostoolbox.netlify.app",
+            "screenshot": "screenshots/macostoolbox.png",
+            "status": "success"
+          },
+          {
+            "name": "unrivaled-douhua-5f6118",
+            "url": "https://unrivaled-douhua-5f6118.netlify.app",
+            "screenshot": "screenshots/unrivaled-douhua-5f6118.png",
+            "status": "success"
+          },
+          {
+            "name": "steroid-guide",
+            "url": "https://steroid-guide.netlify.app",
+            "screenshot": "screenshots/steroid-guide.png",
+            "status": "success"
+          },
+          {
+            "name": "clinquant-custard-ea9541",
+            "url": "https://clinquant-custard-ea9541.netlify.app",
+            "screenshot": "screenshots/clinquant-custard-ea9541.png",
+            "status": "success"
+          },
+          {
+            "name": "zingy-griffin-2aaa95",
+            "url": "https://zingy-griffin-2aaa95.netlify.app",
+            "screenshot": "screenshots/zingy-griffin-2aaa95.png",
+            "status": "success"
+          },
+          {
+            "name": "uiplaygrounddemure",
+            "url": "https://uiplaygrounddemure.netlify.app",
+            "screenshot": "screenshots/uiplaygrounddemure.png",
+            "status": "success"
+          },
+          {
+            "name": "effulgent-banoffee-0066a0",
+            "url": "https://effulgent-banoffee-0066a0.netlify.app",
+            "screenshot": "screenshots/effulgent-banoffee-0066a0.png",
+            "status": "success"
+          },
+          {
+            "name": "homebaseboard",
+            "url": "https://homebaseboard.netlify.app",
+            "screenshot": "screenshots/homebaseboard.png",
+            "status": "success"
+          },
+          {
+            "name": "extraordinary-chimera",
+            "url": "https://extraordinary-chimera-4ff070.netlify.app",
+            "screenshot": "screenshots/extraordinary-chimera.png",
+            "status": "success"
+          },
+          {
+            "name": "funny-fenglisu-88d17f",
+            "url": "https://funny-fenglisu-88d17f.netlify.app",
+            "screenshot": "screenshots/funny-fenglisu-88d17f.png",
+            "status": "success"
+          },
+          {
+            "name": "eclectic-sundae-039c2a",
+            "url": "https://eclectic-sundae-039c2a.netlify.app",
+            "screenshot": "screenshots/eclectic-sundae-039c2a.png",
+            "status": "success"
+          },
+          {
+            "name": "delicate-queijadas-815906",
+            "url": "https://delicate-queijadas-815906.netlify.app",
+            "screenshot": "screenshots/delicate-queijadas-815906.png",
+            "status": "success"
+          },
+          {
+            "name": "tiny-licorice-ce088d",
+            "url": "https://tiny-licorice-ce088d.netlify.app",
+            "screenshot": "screenshots/tiny-licorice-ce088d.png",
+            "status": "success"
+          },
+          {
+            "name": "chimerical-elf-43064a",
+            "url": "https://chimerical-elf-43064a.netlify.app",
+            "screenshot": "screenshots/chimerical-elf-43064a.png",
+            "status": "success"
+          }
+        ];
+
+        // Load project data
+        function loadProjects() {
+            try {
+                const data = SITE_DATA;
+                
+                // Filter out hidden projects and merge with saved states
+                projects = data
+                    .filter(project => !hiddenProjects.includes(project.name))
+                    .map(project => {
+                        const savedState = projectStates[project.name] || {};
+                        const optimalSize = determineOptimalSize(project);
+                        
+                        return {
+                            ...project,
+                            size: savedState.size || optimalSize,
+                            roundedCorners: savedState.roundedCorners || false,
+                            featured: featuredProjects.includes(project.name),
+                            useLivePreview: savedState.useLivePreview !== false // Default to true
+                        };
+                    });
+                
+                updateStats();
+                renderGallery();
+                // Load icons after projects
+                loadAppIcons();
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('gallery').innerHTML = '<div class="loading">Error loading projects</div>';
+            }
+        }
+
+        function updateStats() {
+            const total = projects.length + hiddenProjects.length + appIcons.length;
+            const hidden = hiddenProjects.length;
+            const successCount = projects.filter(p => p.status === 'success').length;
+            const iconCount = appIcons.length;
+            
+            // Update header badges
+            document.getElementById('totalBadge').textContent = total;
+            document.getElementById('successBadge').textContent = successCount;
+            document.getElementById('hiddenBadge').textContent = hidden;
+            document.getElementById('iconBadge').textContent = iconCount;
+            
+            // Update old stats (if they still exist)
+            const totalCountEl = document.getElementById('totalCount');
+            const hiddenCountEl = document.getElementById('hiddenCount');
+            if (totalCountEl) totalCountEl.textContent = total;
+            if (hiddenCountEl) hiddenCountEl.textContent = hidden;
+        }
+
+        function saveProjectState(projectName, state) {
+            projectStates[projectName] = state;
+            localStorage.setItem('projectStates', JSON.stringify(projectStates));
+        }
+
+        function saveHiddenProjects() {
+            localStorage.setItem('hiddenProjects', JSON.stringify(hiddenProjects));
+        }
+
+        function removeProject(projectName) {
+            if (confirm(`Remove ${projectName} from gallery?`)) {
+                hiddenProjects.push(projectName);
+                saveHiddenProjects();
+                projects = projects.filter(p => p.name !== projectName);
+                updateStats();
+                renderGallery();
+            }
+        }
+
+        function filterProjects(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`).classList.add('active');
+            renderGallery();
+        }
+        
+        // Load app icons from config file
+        async function loadAppIcons() {
+            try {
+                // Load icons configuration
+                const response = await fetch('icons-config.json');
+                const config = await response.json();
+                APP_ICONS = config.icons;
+                
+                // Process icons
+                appIcons = APP_ICONS.map(icon => {
+                    const savedState = projectStates[icon.name] || {};
+                    return {
+                        ...icon,
+                        type: 'icon',
+                        size: savedState.size || 'icon-square',
+                        roundedCorners: savedState.roundedCorners !== false, // Default to true for icons
+                        screenshot: `app-icons/${icon.name}.png`,
+                    };
+                });
+                updateStats();
+                renderGallery();
+            } catch (error) {
+                console.error('Error loading app icons:', error);
+                // Fall back to embedded icons if config fails
+                APP_ICONS = [
+                    { name: 'app-icon-1', displayName: 'App Icon 1' },
+                    { name: 'app-icon-2', displayName: 'App Icon 2' },
+                    { name: 'app-icon-3', displayName: 'App Icon 3' },
+                    { name: 'file-creator', displayName: 'File Creator' },
+                    { name: 'drunk-on-java', displayName: 'Drunk On Java' },
+                    { name: 'app-icon-4', displayName: 'App Icon 4' },
+                    { name: 'file-fuse', displayName: 'File Fuse' },
+                    { name: 'gpt4o', displayName: 'GPT-4o Assistant' },
+                    { name: 'hammer', displayName: 'Hammer Tools' },
+                    { name: 'mindblitz', displayName: 'MindBlitz' },
+                    { name: 'minimalist', displayName: 'Minimalist' },
+                    { name: 'template', displayName: 'Template' },
+                    { name: 'xcode-vscode-1', displayName: 'Xcode VS Code 1' },
+                    { name: 'xcode-vscode-2', displayName: 'Xcode VS Code 2' },
+                    { name: 'xcode-vscode-3', displayName: 'Xcode VS Code 3' }
+                ];
+                appIcons = APP_ICONS.map(icon => {
+                    const savedState = projectStates[icon.name] || {};
+                    return {
+                        ...icon,
+                        type: 'icon',
+                        size: savedState.size || 'icon-square',
+                        roundedCorners: savedState.roundedCorners !== false,
+                        screenshot: `app-icons/${icon.name}.png`,
+                    };
+                });
+                updateStats();
+                renderGallery();
+            }
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredProjects = projects;
+            let filteredIcons = appIcons;
+            
+            // Apply status filter (only for projects, not icons)
+            if (currentFilter === 'success') {
+                filteredProjects = filteredProjects.filter(p => p.status === 'success');
+            } else if (currentFilter === 'failed') {
+                filteredProjects = filteredProjects.filter(p => p.status === 'failed');
+            }
+            
+            // Apply search filter
+            if (searchTerm) {
+                filteredProjects = filteredProjects.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    p.url.toLowerCase().includes(searchTerm)
+                );
+                filteredIcons = filteredIcons.filter(i => 
+                    i.name.toLowerCase().includes(searchTerm) ||
+                    i.displayName.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Combine projects and icons
+            let allItems = [...filteredProjects, ...filteredIcons];
+            
+            // Sort to put projects first (featured at top), then icons
+            allItems.sort((a, b) => {
+                // Projects before icons
+                if (!a.type && b.type === 'icon') return -1;
+                if (a.type === 'icon' && !b.type) return 1;
+                
+                // Among projects, featured first
+                if (!a.type && !b.type) {
+                    if (a.featured && !b.featured) return -1;
+                    if (!a.featured && b.featured) return 1;
+                    const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
+                    return sizeOrder[a.size] - sizeOrder[b.size];
+                }
+                
+                return 0;
+            });
+            
+            if (allItems.length === 0) {
+                gallery.innerHTML = '<div class="loading">No items found</div>';
+                return;
+            }
+            
+            gallery.innerHTML = allItems.map((item, index) => {
+                if (item.type === 'icon') {
+                    return `
+                        <div class="project-card ${item.size} ${item.roundedCorners ? 'rounded-corners' : ''} ${currentEditingId === item.name ? 'editing' : ''} ${selectMode ? 'selecting' : ''} ${selectedCards.has(item.name) ? 'selected' : ''}" 
+                             id="card-${index}"
+                             onclick="${selectMode ? `toggleCardSelection('${item.name}')` : ''}">
+                            <button class="remove-button" onclick="event.stopPropagation(); removeItem('${item.name}', 'icon')" title="Remove from gallery">×</button>
+                            <div class="image-container">
+                                <img 
+                                    src="${item.screenshot}" 
+                                    alt="${item.displayName}" 
+                                    class="project-screenshot"
+                                    id="img-${index}"
+                                    loading="lazy"
+                                />
+                                <div class="auto-size-badge">ICON</div>
+                            </div>
+                            <div class="project-overlay" style="${selectMode ? 'pointer-events: none;' : ''}">
+                                <h3 class="project-name">${item.displayName}</h3>
+                                <div class="project-actions">
+                                    <button class="action-button" onclick="event.stopPropagation(); openEditPanel('${item.name}', 'icon')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="project-card ${item.size} ${item.featured ? 'featured' : ''} ${item.roundedCorners ? 'rounded-corners' : ''} ${currentEditingId === item.name ? 'editing' : ''} ${selectMode ? 'selecting' : ''} ${selectedCards.has(item.name) ? 'selected' : ''}" 
+                             id="card-${index}"
+                             onclick="${selectMode ? `toggleCardSelection('${item.name}')` : ''}">
+                            <button class="remove-button" onclick="event.stopPropagation(); removeProject('${item.name}')" title="Remove from gallery">×</button>
+                            <div class="image-container">
+                                ${item.useLivePreview && item.status === 'success' ? 
+                                    `<div class="iframe-loading">⟳</div>
+                                     <iframe 
+                                        src="${item.url}" 
+                                        class="project-iframe"
+                                        id="iframe-${index}"
+                                        onload="this.previousElementSibling.style.display='none'"
+                                        sandbox="allow-scripts allow-same-origin"
+                                        loading="lazy"
+                                    ></iframe>` :
+                                    item.screenshot && item.status === 'success' ? 
+                                        `<img 
+                                            src="${item.screenshot}" 
+                                            alt="${item.name}" 
+                                            class="project-screenshot"
+                                            id="img-${index}"
+                                            loading="lazy"
+                                            onclick="if (!currentEditingId && !selectMode) window.open('${item.url}', '_blank')"
+                                        >` :
+                                        `<div class="project-placeholder">📁</div>`
+                                }
+                                <div class="auto-size-badge">${item.size.toUpperCase()}</div>
+                            </div>
+                            <div class="project-overlay" style="${selectMode ? 'pointer-events: none;' : ''}">
+                                <h3 class="project-name">${item.name}</h3>
+                                <p class="project-url">${item.url}</p>
+                                <div class="project-actions">
+                                    <a href="${item.url}" target="_blank" class="action-button primary" onclick="event.stopPropagation()">Visit Site</a>
+                                    <button class="action-button" onclick="event.stopPropagation(); openEditPanel('${item.name}')">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        // Remove icon
+        function removeItem(itemName, type) {
+            if (confirm(`Remove ${itemName} from gallery?`)) {
+                if (type === 'icon') {
+                    appIcons = appIcons.filter(i => i.name !== itemName);
+                } else {
+                    hiddenProjects.push(itemName);
+                    saveHiddenProjects();
+                    projects = projects.filter(p => p.name !== itemName);
+                }
+                updateStats();
+                renderGallery();
+            }
+        }
+
+        // Open edit panel
+        function openEditPanel(itemName, type = 'project') {
+            currentEditingId = itemName;
+            currentEditingType = type;
+            document.getElementById('editPanel').classList.add('active');
+            renderGallery();
+            renderEditForm();
+        }
+
+        // Close edit panel
+        function closeEditPanel() {
+            document.getElementById('editPanel').classList.remove('active');
+            currentEditingId = null;
+            renderGallery();
+        }
+
+        // Render edit form
+        function renderEditForm() {
+            let item;
+            let sizeOptions;
+            
+            if (currentEditingType === 'icon') {
+                item = appIcons.find(i => i.name === currentEditingId);
+                sizeOptions = ['icon-medium', 'icon-large'];
+            } else {
+                item = projects.find(p => p.name === currentEditingId);
+                sizeOptions = ['tiny', 'small', 'medium', 'large', 'xlarge'];
+            }
+            
+            if (!item) return;
+            
+            const editContent = document.getElementById('editContent');
+            
+            editContent.innerHTML = `
+                <div class="edit-group">
+                    <label>${currentEditingType === 'icon' ? 'Icon' : 'Project'} Name</label>
+                    <div class="edit-input" style="cursor: default;">${item.displayName || item.name}</div>
+                </div>
+                
+                ${currentEditingType !== 'icon' ? `
+                <div class="edit-group">
+                    <label>Project URL</label>
+                    <div class="edit-input" style="cursor: default;">${item.url}</div>
+                </div>` : ''}
+                
+                <div class="edit-group">
+                    <label>Card Size</label>
+                    <div class="size-selector">
+                        ${sizeOptions.map(size => 
+                            `<button class="size-button ${item.size === size ? 'active' : ''}" 
+                                     onclick="updateItem('size', '${size}')">${size.replace('icon-', '')}</button>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                ${currentEditingType !== 'icon' ? `
+                <div class="edit-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" 
+                               id="livePreview"
+                               ${item.useLivePreview ? 'checked' : ''}
+                               onchange="updateItem('useLivePreview', this.checked)">
+                        <label for="livePreview">Use Live Preview</label>
+                    </div>
+                </div>` : ''}
+                
+                <div class="edit-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" 
+                               id="roundedCorners"
+                               ${item.roundedCorners ? 'checked' : ''}
+                               onchange="updateItem('roundedCorners', this.checked)">
+                        <label for="roundedCorners">Rounded Corners</label>
+                    </div>
+                </div>
+                
+                ${item.useLivePreview && currentEditingType !== 'icon' ? `
+                    <button class="refresh-button" onclick="refreshIframe('${item.name}')">
+                        Refresh Preview
+                    </button>
+                ` : ''}
+            `;
+        }
+
+        // Update item
+        function updateItem(field, value) {
+            let item;
+            
+            if (currentEditingType === 'icon') {
+                item = appIcons.find(i => i.name === currentEditingId);
+            } else {
+                item = projects.find(p => p.name === currentEditingId);
+            }
+            
+            if (!item) return;
+            
+            item[field] = value;
+            
+            saveProjectState(item.name, {
+                size: item.size,
+                roundedCorners: item.roundedCorners,
+                useLivePreview: item.useLivePreview
+            });
+            
+            renderGallery();
+            renderEditForm();
+        }
+
+        // Refresh iframe
+        function refreshIframe(projectName) {
+            const project = projects.find(p => p.name === projectName);
+            const index = projects.indexOf(project);
+            const iframe = document.getElementById(`iframe-${index}`);
+            if (iframe) {
+                iframe.src = iframe.src;
+            }
+        }
+
+        // Search input event
+        document.getElementById('searchInput')?.addEventListener('input', renderGallery);
+
+        // Initialize
+        function initialize() {
+            loadProjects();
+        }
+        
+        initialize();
+
+        // Refresh all iframes every 5 minutes to keep previews current
+        setInterval(() => {
+            projects.forEach((project, index) => {
+                if (project.useLivePreview) {
+                    const iframe = document.getElementById(`iframe-${index}`);
+                    if (iframe) {
+                        iframe.src = iframe.src;
+                    }
+                }
+            });
+        }, 300000); // 5 minutes
+        
+        // Multi-select functions
+        function toggleSelectMode() {
+            selectMode = !selectMode;
+            selectedCards.clear();
+            
+            if (selectMode) {
+                document.getElementById('multiSelectControls').classList.add('active');
+                document.querySelector('.select-mode-button').textContent = 'Cancel Select';
+            } else {
+                document.getElementById('multiSelectControls').classList.remove('active');
+                document.querySelector('.select-mode-button').textContent = 'Select Multiple';
+            }
+            
+            updateSelectedCount();
+            renderGallery();
+        }
+        
+        function cancelSelectMode() {
+            selectMode = false;
+            selectedCards.clear();
+            document.getElementById('multiSelectControls').classList.remove('active');
+            document.querySelector('.select-mode-button').textContent = 'Select Multiple';
+            updateSelectedCount();
+            renderGallery();
+        }
+        
+        function toggleCardSelection(name) {
+            if (selectedCards.has(name)) {
+                selectedCards.delete(name);
+            } else {
+                selectedCards.add(name);
+            }
+            updateSelectedCount();
+            renderGallery();
+        }
+        
+        function updateSelectedCount() {
+            document.getElementById('selectedCount').textContent = selectedCards.size;
+        }
+        
+        function hideSelected() {
+            if (selectedCards.size === 0) return;
+            
+            const confirmMessage = `Hide ${selectedCards.size} selected project${selectedCards.size > 1 ? 's' : ''}?`;
+            if (!confirm(confirmMessage)) return;
+            
+            // Add selected cards to hidden projects
+            selectedCards.forEach(name => {
+                if (!hiddenProjects.includes(name)) {
+                    hiddenProjects.push(name);
+                }
+            });
+            
+            // Save to localStorage
+            saveHiddenProjects();
+            
+            // Update projects array
+            projects = projects.filter(p => !selectedCards.has(p.name));
+            
+            // Clear selection and exit select mode
+            selectedCards.clear();
+            cancelSelectMode();
+            
+            // Update UI
+            updateStats();
+            renderGallery();
+        }
+        
+        function showHiddenProjects() {
+            if (hiddenProjects.length === 0) {
+                alert('No hidden projects to show');
+                return;
+            }
+            
+            if (confirm(`Show ${hiddenProjects.length} hidden projects?`)) {
+                // Clear hidden projects
+                hiddenProjects = [];
+                saveHiddenProjects();
+                
+                // Reload all projects
+                loadProjects();
+            }
+        }
+        
+        // Debugging functions
+        function clearAllHidden() {
+            if (confirm('Clear all hidden projects? This will show all projects.')) {
+                hiddenProjects = [];
+                localStorage.removeItem('hiddenProjects');
+                loadProjects();
+                showDebugInfo('All hidden projects cleared!');
+            }
+        }
+        
+        function resetLocalStorage() {
+            if (confirm('Reset all settings? This will clear all customizations.')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        function exportSettings() {
+            const settings = {
+                hiddenProjects: hiddenProjects,
+                projectStates: projectStates,
+                timestamp: new Date().toISOString()
+            };
+            
+            const json = JSON.stringify(settings, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'gallery-settings.json';
+            a.click();
+            
+            showDebugInfo('Settings exported to gallery-settings.json');
+        }
+        
+        function showDebugInfo(message) {
+            const debugInfo = document.getElementById('debugInfo');
+            debugInfo.textContent = `${new Date().toLocaleTimeString()}: ${message}\n` + debugInfo.textContent;
+            debugInfo.classList.add('active');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                debugInfo.classList.remove('active');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Hidden Projects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #06b6d4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #0891b2;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 20px;
+            background: #262626;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clear Hidden Projects</h1>
+    <div class="info">
+        <p>Current hidden projects: <span id="count">0</span></p>
+        <p id="projectList"></p>
+    </div>
+    
+    <button onclick="clearHidden()">Clear All Hidden Projects</button>
+    <button onclick="window.location.href='index.html'">Back to Gallery</button>
+    
+    <script>
+        // Display current hidden projects
+        const hidden = JSON.parse(localStorage.getItem('hiddenProjects') || '[]');
+        document.getElementById('count').textContent = hidden.length;
+        if (hidden.length > 0) {
+            document.getElementById('projectList').textContent = 'Hidden: ' + hidden.join(', ');
+        }
+        
+        function clearHidden() {
+            localStorage.removeItem('hiddenProjects');
+            alert('Hidden projects cleared! Returning to gallery...');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

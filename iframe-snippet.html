@@ -1,0 +1,97 @@
+<!-- Add this snippet to your site's <head> section for iframe optimization -->
+
+<script>
+// Iframe optimization
+(function() {
+    // Check if in iframe
+    if (window.self !== window.top) {
+        // Add class for CSS targeting
+        document.documentElement.classList.add('in-iframe');
+        
+        // Apply immediate styles
+        document.documentElement.style.cssText = `
+            zoom: 0.8;
+            overflow: hidden;
+            -webkit-text-size-adjust: none;
+        `;
+        
+        // Wait for DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inject additional styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .in-iframe * {
+                    animation-duration: 0s !important;
+                    transition-duration: 0s !important;
+                    scroll-behavior: auto !important;
+                }
+                
+                .in-iframe body {
+                    overflow: hidden !important;
+                    position: relative !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                }
+                
+                /* Hide common popup elements */
+                .in-iframe .modal,
+                .in-iframe .popup,
+                .in-iframe .cookie-banner,
+                .in-iframe [role="dialog"],
+                .in-iframe .chatbot {
+                    display: none !important;
+                }
+                
+                /* Fix common layout issues */
+                .in-iframe .fixed {
+                    position: absolute !important;
+                }
+                
+                /* React apps */
+                .in-iframe #root,
+                .in-iframe #app,
+                .in-iframe #__next {
+                    height: 100vh !important;
+                    overflow: hidden !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Override viewport meta
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+            } else {
+                const newViewport = document.createElement('meta');
+                newViewport.name = 'viewport';
+                newViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+                document.head.appendChild(newViewport);
+            }
+            
+            // Prevent scrolling
+            document.body.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            // Send ready message
+            window.parent.postMessage({ 
+                type: 'iframe-ready', 
+                url: window.location.href,
+                title: document.title 
+            }, '*');
+        });
+    }
+})();
+</script>
+
+<style>
+/* Fallback styles */
+html.in-iframe {
+    font-size: 14px !important;
+}
+
+.in-iframe body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+</style>

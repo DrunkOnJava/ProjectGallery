@@ -1,0 +1,19 @@
+{
+  "icons": [
+    { "name": "app-icon-1", "displayName": "App Icon 1" },
+    { "name": "app-icon-2", "displayName": "App Icon 2" },
+    { "name": "app-icon-3", "displayName": "App Icon 3" },
+    { "name": "file-creator", "displayName": "File Creator" },
+    { "name": "drunk-on-java", "displayName": "Drunk On Java" },
+    { "name": "app-icon-4", "displayName": "App Icon 4" },
+    { "name": "file-fuse", "displayName": "File Fuse" },
+    { "name": "gpt4o", "displayName": "GPT-4o Assistant" },
+    { "name": "hammer", "displayName": "Hammer Tools" },
+    { "name": "mindblitz", "displayName": "MindBlitz" },
+    { "name": "minimalist", "displayName": "Minimalist" },
+    { "name": "template", "displayName": "Template" },
+    { "name": "xcode-vscode-1", "displayName": "Xcode VS Code 1" },
+    { "name": "xcode-vscode-2", "displayName": "Xcode VS Code 2" },
+    { "name": "xcode-vscode-3", "displayName": "Xcode VS Code 3" }
+  ]
+}

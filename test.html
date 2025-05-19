@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Gallery</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .status { margin: 20px 0; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Test Gallery Loading</h1>
+    <div id="status" class="status">Loading...</div>
+    
+    <script>
+        const statusEl = document.getElementById('status');
+        
+        async function testLoad() {
+            try {
+                statusEl.textContent = 'Fetching site-data.json...';
+                const response = await fetch('site-data.json');
+                statusEl.textContent = `Response status: ${response.status}`;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                statusEl.textContent = `Success! Loaded ${data.length} projects`;
+                console.log('Data:', data);
+            } catch (error) {
+                statusEl.textContent = `Error: ${error.message}`;
+                console.error('Error:', error);
+            }
+        }
+        
+        testLoad();
+    </script>
+</body>
+</html>
