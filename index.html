@@ -377,8 +377,8 @@
             max-width: 1600px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            grid-auto-rows: 180px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-auto-rows: 120px;
             gap: 1.5rem;
             grid-auto-flow: dense;
         }
@@ -396,29 +396,30 @@
 
         /* Card sizes - Single cells */
         .project-card.tiny { grid-row: span 1; }
-        .project-card.small { grid-row: span 1; }
-        .project-card.medium { grid-row: span 2; }
+        .project-card.small { grid-row: span 2; }
+        .project-card.medium { grid-row: span 3; }
         
         /* Multi-cell cards */
         .project-card.tall { 
-            grid-row: span 2;
+            grid-row: span 4;
             height: 100%;
         }
         
         .project-card.wide { 
             grid-column: span 2;
+            grid-row: span 2;
             height: 100%;
         }
         
         .project-card.large {
             grid-column: span 2;
-            grid-row: span 2;
+            grid-row: span 3;
             height: 100%;
         }
         
         .project-card.xlarge {
-            grid-column: span 2;
-            grid-row: span 3;
+            grid-column: span 3;
+            grid-row: span 4;
             height: 100%;
         }
         
@@ -432,7 +433,7 @@
         /* Featured projects */
         .project-card.featured {
             grid-column: span 2;
-            grid-row: span 2;
+            grid-row: span 3;
         }
 
         .project-card:hover {
@@ -874,7 +875,7 @@
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
                 gap: 1rem;
             }
 
@@ -891,6 +892,11 @@
             .project-card.large,
             .project-card.xlarge {
                 grid-column: span 1;
+            }
+            
+            /* Adjust tall cards on mobile */
+            .project-card.tall {
+                grid-row: span 3;
             }
         }
     </style>
