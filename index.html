@@ -296,11 +296,6 @@
             color: #93c5fd;
         }
         
-        .filter-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
         /* Multi-select mode */
         .multi-select-controls {
             display: none;
@@ -937,7 +932,6 @@
             <button class="cancel-select-button" onclick="cancelSelectMode()">Cancel</button>
         </div>
         <button class="filter-button" onclick="showHiddenProjects()">Show Hidden</button>
-        <button class="filter-button" onclick="checkNewDeployments()">🔄 Check New Sites</button>
     </div>
 
     <div class="gallery" id="gallery">
@@ -1038,346 +1032,338 @@
 
         // Embedded site data to avoid CORS issues
         const SITE_DATA = [
-  {
-    "name": "blue-mountain-wicks",
-    "url": "https://blue-mountain-wicks.netlify.app",
-    "screenshot": "screenshots/blue-mountain-wicks.png",
-    "status": "success",
-    "useLivePreview": true,
-    "featured": true
-  },
-  {
-    "name": "scintillating-torrone-19b562",
-    "url": "https://scintillating-torrone-19b562.netlify.app",
-    "screenshot": "screenshots/scintillating-torrone-19b562.png",
-    "status": "success"
-  },
-  {
-    "name": "porfolioplus",
-    "url": "https://porfolioplus.netlify.app",
-    "screenshot": "screenshots/porfolioplus.png",
-    "status": "success"
-  },
-  {
-    "name": "luxury-frangollo-11cf88",
-    "url": "https://luxury-frangollo-11cf88.netlify.app",
-    "screenshot": "screenshots/luxury-frangollo-11cf88.png",
-    "status": "success"
-  },
-  {
-    "name": "bejewelled-crostata-2737b4",
-    "url": "https://bejewelled-crostata-2737b4.netlify.app",
-    "screenshot": "screenshots/bejewelled-crostata-2737b4.png",
-    "status": "success"
-  },
-  {
-    "name": "material-dashboard-react",
-    "url": "https://material-dashboard-react-1746753948.netlify.app",
-    "screenshot": "screenshots/material-dashboard-react.png",
-    "status": "success"
-  },
-  {
-    "name": "loquacious-begonia-80c757",
-    "url": "https://loquacious-begonia-80c757.netlify.app",
-    "screenshot": "screenshots/loquacious-begonia-80c757.png",
-    "status": "success"
-  },
-  {
-    "name": "silly-lily-66b5e2",
-    "url": "https://silly-lily-66b5e2.netlify.app",
-    "screenshot": "screenshots/silly-lily-66b5e2.png",
-    "status": "success"
-  },
-  {
-    "name": "mindblitz",
-    "url": "https://mindblitz.netlify.app",
-    "screenshot": "screenshots/mindblitz.png",
-    "status": "success"
-  },
-  {
-    "name": "file-fuse",
-    "url": "https://file-fuse.netlify.app",
-    "screenshot": "screenshots/file-fuse.png",
-    "status": "success"
-  },
-  {
-    "name": "preeminent-hotteok-79f13e",
-    "url": "https://preeminent-hotteok-79f13e.netlify.app",
-    "screenshot": "screenshots/preeminent-hotteok-79f13e.png",
-    "status": "success"
-  },
-  {
-    "name": "magical-bubblegum-faf4ee",
-    "url": "https://magical-bubblegum-faf4ee.netlify.app",
-    "screenshot": "screenshots/magical-bubblegum-faf4ee.png",
-    "status": "success"
-  },
-  {
-    "name": "steady-phoenix-93bfd1",
-    "url": "https://steady-phoenix-93bfd1.netlify.app",
-    "screenshot": "screenshots/steady-phoenix-93bfd1.png",
-    "status": "success"
-  },
-  {
-    "name": "administ",
-    "url": "https://administ.netlify.app",
-    "screenshot": "screenshots/administ.png",
-    "status": "success"
-  },
-  {
-    "name": "brokenfileflattener",
-    "url": "https://brokenfileflattener.netlify.app",
-    "screenshot": "screenshots/brokenfileflattener.png",
-    "status": "success"
-  },
-  {
-    "name": "timewell",
-    "url": "https://timewell.netlify.app",
-    "screenshot": "screenshots/timewell.png",
-    "status": "success"
-  },
-  {
-    "name": "sweet-nougat-1df434",
-    "url": "https://sweet-nougat-1df434.netlify.app",
-    "screenshot": "screenshots/sweet-nougat-1df434.png",
-    "status": "success"
-  },
-  {
-    "name": "griffin-radcliffe-analytics",
-    "url": "https://griffin-radcliffe-analytics.netlify.app",
-    "screenshot": "screenshots/griffin-radcliffe-analytics.png",
-    "status": "success"
-  },
-  {
-    "name": "tango-mango",
-    "url": "https://tango-mango.netlify.app",
-    "screenshot": "screenshots/tango-mango.png",
-    "status": "success"
-  },
-  {
-    "name": "griffin-radcliffe",
-    "url": "https://drunkonjava.com",
-    "screenshot": "screenshots/griffin-radcliffe.png",
-    "status": "success"
-  },
-  {
-    "name": "myfitlifepro",
-    "url": "https://myfitlifepro.netlify.app",
-    "screenshot": "screenshots/myfitlifepro.png",
-    "status": "success"
-  },
-  {
-    "name": "ephemeral-alfajores-3f1147",
-    "url": "https://ephemeral-alfajores-3f1147.netlify.app",
-    "screenshot": "screenshots/ephemeral-alfajores-3f1147.png",
-    "status": "success"
-  },
-  {
-    "name": "tiny-youtiao-dd447a",
-    "url": "https://tiny-youtiao-dd447a.netlify.app",
-    "screenshot": "screenshots/tiny-youtiao-dd447a.png",
-    "status": "success"
-  },
-  {
-    "name": "adorable-empanada-10d2a4",
-    "url": "https://adorable-empanada-10d2a4.netlify.app",
-    "screenshot": "screenshots/adorable-empanada-10d2a4.png",
-    "status": "success"
-  },
-  {
-    "name": "melodious-bienenstitch",
-    "url": "https://melodious-bienenstitch-1857e8.netlify.app",
-    "screenshot": "screenshots/melodious-bienenstitch.png",
-    "status": "success"
-  },
-  {
-    "name": "ryan-maloney",
-    "url": "https://ryan-maloney.netlify.app",
-    "screenshot": "screenshots/ryan-maloney.png",
-    "status": "success"
-  },
-  {
-    "name": "lease-dispute-dc",
-    "url": "https://lease-dispute-dc.netlify.app",
-    "screenshot": "screenshots/lease-dispute-dc.png",
-    "status": "success"
-  },
-  {
-    "name": "stately-kelpie-a559bb",
-    "url": "https://stately-kelpie-a559bb.netlify.app",
-    "screenshot": null,
-    "status": "failed",
-    "error": "Screenshot failed for https://stately-kelpie-a559bb.netlify.app: Error: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://stately-kelpie-a559bb.netlify.app/\", waiting until \"networkidle\"\u001b[22m\n\n    at takeScreenshot (/Users/griffin/Projects/ProjectGallery/playwright-screenshot.js:18:16) {\n  name: 'TimeoutError'\n}\n"
-  },
-  {
-    "name": "rococo-starburst-882bb6",
-    "url": "https://rococo-starburst-882bb6.netlify.app",
-    "screenshot": "screenshots/rococo-starburst-882bb6.png",
-    "status": "success"
-  },
-  {
-    "name": "bucolic-griffin-9cf2cb",
-    "url": "https://bucolic-griffin-9cf2cb.netlify.app",
-    "screenshot": "screenshots/bucolic-griffin-9cf2cb.png",
-    "status": "success"
-  },
-  {
-    "name": "scintillating-youtiao",
-    "url": "https://scintillating-youtiao-a64c89.netlify.app",
-    "screenshot": "screenshots/scintillating-youtiao.png",
-    "status": "success"
-  },
-  {
-    "name": "melodious-melba-4d2edd",
-    "url": "https://melodious-melba-4d2edd.netlify.app",
-    "screenshot": "screenshots/melodious-melba-4d2edd.png",
-    "status": "success"
-  },
-  {
-    "name": "thehintdropper",
-    "url": "https://thehintdropper.netlify.app",
-    "screenshot": "screenshots/thehintdropper.png",
-    "status": "success"
-  },
-  {
-    "name": "resonant-baklava-be6eb1",
-    "url": "https://resonant-baklava-be6eb1.netlify.app",
-    "screenshot": "screenshots/resonant-baklava-be6eb1.png",
-    "status": "success"
-  },
-  {
-    "name": "benevolent-flan-f2c21d",
-    "url": "https://benevolent-flan-f2c21d.netlify.app",
-    "screenshot": "screenshots/benevolent-flan-f2c21d.png",
-    "status": "success"
-  },
-  {
-    "name": "famous-dragon-b0cae6",
-    "url": "https://famous-dragon-b0cae6.netlify.app",
-    "screenshot": "screenshots/famous-dragon-b0cae6.png",
-    "status": "success"
-  },
-  {
-    "name": "jolly-mooncake-7d55df",
-    "url": "https://jolly-mooncake-7d55df.netlify.app",
-    "screenshot": "screenshots/jolly-mooncake-7d55df.png",
-    "status": "success"
-  },
-  {
-    "name": "friendly-daifuku-78fd5b",
-    "url": "https://friendly-daifuku-78fd5b.netlify.app",
-    "screenshot": "screenshots/friendly-daifuku-78fd5b.png",
-    "status": "success"
-  },
-  {
-    "name": "bejewelled-kataifi-88b1d9",
-    "url": "https://bejewelled-kataifi-88b1d9.netlify.app",
-    "screenshot": "screenshots/bejewelled-kataifi-88b1d9.png",
-    "status": "success"
-  },
-  {
-    "name": "steroidbase",
-    "url": "https://steroidbase.netlify.app",
-    "screenshot": "screenshots/steroidbase.png",
-    "status": "success"
-  },
-  {
-    "name": "coruscating-cat-3a8117",
-    "url": "https://coruscating-cat-3a8117.netlify.app",
-    "screenshot": "screenshots/coruscating-cat-3a8117.png",
-    "status": "success"
-  },
-  {
-    "name": "remarkable-arithmetic",
-    "url": "https://remarkable-arithmetic-edf3e0.netlify.app",
-    "screenshot": "screenshots/remarkable-arithmetic.png",
-    "status": "success"
-  },
-  {
-    "name": "macostoolbox",
-    "url": "https://macostoolbox.netlify.app",
-    "screenshot": "screenshots/macostoolbox.png",
-    "status": "success"
-  },
-  {
-    "name": "unrivaled-douhua-5f6118",
-    "url": "https://unrivaled-douhua-5f6118.netlify.app",
-    "screenshot": "screenshots/unrivaled-douhua-5f6118.png",
-    "status": "success"
-  },
-  {
-    "name": "steroid-guide",
-    "url": "https://steroid-guide.netlify.app",
-    "screenshot": "screenshots/steroid-guide.png",
-    "status": "success"
-  },
-  {
-    "name": "clinquant-custard-ea9541",
-    "url": "https://clinquant-custard-ea9541.netlify.app",
-    "screenshot": "screenshots/clinquant-custard-ea9541.png",
-    "status": "success"
-  },
-  {
-    "name": "zingy-griffin-2aaa95",
-    "url": "https://zingy-griffin-2aaa95.netlify.app",
-    "screenshot": "screenshots/zingy-griffin-2aaa95.png",
-    "status": "success"
-  },
-  {
-    "name": "uiplaygrounddemure",
-    "url": "https://uiplaygrounddemure.netlify.app",
-    "screenshot": "screenshots/uiplaygrounddemure.png",
-    "status": "success"
-  },
-  {
-    "name": "effulgent-banoffee-0066a0",
-    "url": "https://effulgent-banoffee-0066a0.netlify.app",
-    "screenshot": "screenshots/effulgent-banoffee-0066a0.png",
-    "status": "success"
-  },
-  {
-    "name": "homebaseboard",
-    "url": "https://homebaseboard.netlify.app",
-    "screenshot": "screenshots/homebaseboard.png",
-    "status": "success"
-  },
-  {
-    "name": "extraordinary-chimera",
-    "url": "https://extraordinary-chimera-4ff070.netlify.app",
-    "screenshot": "screenshots/extraordinary-chimera.png",
-    "status": "success"
-  },
-  {
-    "name": "funny-fenglisu-88d17f",
-    "url": "https://funny-fenglisu-88d17f.netlify.app",
-    "screenshot": "screenshots/funny-fenglisu-88d17f.png",
-    "status": "success"
-  },
-  {
-    "name": "eclectic-sundae-039c2a",
-    "url": "https://eclectic-sundae-039c2a.netlify.app",
-    "screenshot": "screenshots/eclectic-sundae-039c2a.png",
-    "status": "success"
-  },
-  {
-    "name": "delicate-queijadas-815906",
-    "url": "https://delicate-queijadas-815906.netlify.app",
-    "screenshot": "screenshots/delicate-queijadas-815906.png",
-    "status": "success"
-  },
-  {
-    "name": "tiny-licorice-ce088d",
-    "url": "https://tiny-licorice-ce088d.netlify.app",
-    "screenshot": "screenshots/tiny-licorice-ce088d.png",
-    "status": "success"
-  },
-  {
-    "name": "chimerical-elf-43064a",
-    "url": "https://chimerical-elf-43064a.netlify.app",
-    "screenshot": "screenshots/chimerical-elf-43064a.png",
-    "status": "success"
-  }
-];
+          {
+            "name": "scintillating-torrone-19b562",
+            "url": "https://scintillating-torrone-19b562.netlify.app",
+            "screenshot": "screenshots/scintillating-torrone-19b562.png",
+            "status": "success"
+          },
+          {
+            "name": "porfolioplus",
+            "url": "https://porfolioplus.netlify.app",
+            "screenshot": "screenshots/porfolioplus.png",
+            "status": "success"
+          },
+          {
+            "name": "luxury-frangollo-11cf88",
+            "url": "https://luxury-frangollo-11cf88.netlify.app",
+            "screenshot": "screenshots/luxury-frangollo-11cf88.png",
+            "status": "success"
+          },
+          {
+            "name": "bejewelled-crostata-2737b4",
+            "url": "https://bejewelled-crostata-2737b4.netlify.app",
+            "screenshot": "screenshots/bejewelled-crostata-2737b4.png",
+            "status": "success"
+          },
+          {
+            "name": "material-dashboard-react",
+            "url": "https://material-dashboard-react-1746753948.netlify.app",
+            "screenshot": "screenshots/material-dashboard-react.png",
+            "status": "success"
+          },
+          {
+            "name": "loquacious-begonia-80c757",
+            "url": "https://loquacious-begonia-80c757.netlify.app",
+            "screenshot": "screenshots/loquacious-begonia-80c757.png",
+            "status": "success"
+          },
+          {
+            "name": "silly-lily-66b5e2",
+            "url": "https://silly-lily-66b5e2.netlify.app",
+            "screenshot": "screenshots/silly-lily-66b5e2.png",
+            "status": "success"
+          },
+          {
+            "name": "mindblitz",
+            "url": "https://mindblitz.netlify.app",
+            "screenshot": "screenshots/mindblitz.png",
+            "status": "success"
+          },
+          {
+            "name": "file-fuse",
+            "url": "https://file-fuse.netlify.app",
+            "screenshot": "screenshots/file-fuse.png",
+            "status": "success"
+          },
+          {
+            "name": "preeminent-hotteok-79f13e",
+            "url": "https://preeminent-hotteok-79f13e.netlify.app",
+            "screenshot": "screenshots/preeminent-hotteok-79f13e.png",
+            "status": "success"
+          },
+          {
+            "name": "magical-bubblegum-faf4ee",
+            "url": "https://magical-bubblegum-faf4ee.netlify.app",
+            "screenshot": "screenshots/magical-bubblegum-faf4ee.png",
+            "status": "success"
+          },
+          {
+            "name": "steady-phoenix-93bfd1",
+            "url": "https://steady-phoenix-93bfd1.netlify.app",
+            "screenshot": "screenshots/steady-phoenix-93bfd1.png",
+            "status": "success"
+          },
+          {
+            "name": "administ",
+            "url": "https://administ.netlify.app",
+            "screenshot": "screenshots/administ.png",
+            "status": "success"
+          },
+          {
+            "name": "brokenfileflattener",
+            "url": "https://brokenfileflattener.netlify.app",
+            "screenshot": "screenshots/brokenfileflattener.png",
+            "status": "success"
+          },
+          {
+            "name": "timewell",
+            "url": "https://timewell.netlify.app",
+            "screenshot": "screenshots/timewell.png",
+            "status": "success"
+          },
+          {
+            "name": "sweet-nougat-1df434",
+            "url": "https://sweet-nougat-1df434.netlify.app",
+            "screenshot": "screenshots/sweet-nougat-1df434.png",
+            "status": "success"
+          },
+          {
+            "name": "griffin-radcliffe-analytics",
+            "url": "https://griffin-radcliffe-analytics.netlify.app",
+            "screenshot": "screenshots/griffin-radcliffe-analytics.png",
+            "status": "success"
+          },
+          {
+            "name": "tango-mango",
+            "url": "https://tango-mango.netlify.app",
+            "screenshot": "screenshots/tango-mango.png",
+            "status": "success"
+          },
+          {
+            "name": "griffin-radcliffe",
+            "url": "https://drunkonjava.com",
+            "screenshot": "screenshots/griffin-radcliffe.png",
+            "status": "success"
+          },
+          {
+            "name": "myfitlifepro",
+            "url": "https://myfitlifepro.netlify.app",
+            "screenshot": "screenshots/myfitlifepro.png",
+            "status": "success"
+          },
+          {
+            "name": "ephemeral-alfajores-3f1147",
+            "url": "https://ephemeral-alfajores-3f1147.netlify.app",
+            "screenshot": "screenshots/ephemeral-alfajores-3f1147.png",
+            "status": "success"
+          },
+          {
+            "name": "tiny-youtiao-dd447a",
+            "url": "https://tiny-youtiao-dd447a.netlify.app",
+            "screenshot": "screenshots/tiny-youtiao-dd447a.png",
+            "status": "success"
+          },
+          {
+            "name": "adorable-empanada-10d2a4",
+            "url": "https://adorable-empanada-10d2a4.netlify.app",
+            "screenshot": "screenshots/adorable-empanada-10d2a4.png",
+            "status": "success"
+          },
+          {
+            "name": "melodious-bienenstitch",
+            "url": "https://melodious-bienenstitch-1857e8.netlify.app",
+            "screenshot": "screenshots/melodious-bienenstitch.png",
+            "status": "success"
+          },
+          {
+            "name": "ryan-maloney",
+            "url": "https://ryan-maloney.netlify.app",
+            "screenshot": "screenshots/ryan-maloney.png",
+            "status": "success"
+          },
+          {
+            "name": "lease-dispute-dc",
+            "url": "https://lease-dispute-dc.netlify.app",
+            "screenshot": "screenshots/lease-dispute-dc.png",
+            "status": "success"
+          },
+          {
+            "name": "stately-kelpie-a559bb",
+            "url": "https://stately-kelpie-a559bb.netlify.app",
+            "screenshot": null,
+            "status": "failed",
+            "error": "Screenshot failed"
+          },
+          {
+            "name": "rococo-starburst-882bb6",
+            "url": "https://rococo-starburst-882bb6.netlify.app",
+            "screenshot": "screenshots/rococo-starburst-882bb6.png",
+            "status": "success"
+          },
+          {
+            "name": "bucolic-griffin-9cf2cb",
+            "url": "https://bucolic-griffin-9cf2cb.netlify.app",
+            "screenshot": "screenshots/bucolic-griffin-9cf2cb.png",
+            "status": "success"
+          },
+          {
+            "name": "scintillating-youtiao",
+            "url": "https://scintillating-youtiao-a64c89.netlify.app",
+            "screenshot": "screenshots/scintillating-youtiao.png",
+            "status": "success"
+          },
+          {
+            "name": "melodious-melba-4d2edd",
+            "url": "https://melodious-melba-4d2edd.netlify.app",
+            "screenshot": "screenshots/melodious-melba-4d2edd.png",
+            "status": "success"
+          },
+          {
+            "name": "thehintdropper",
+            "url": "https://thehintdropper.netlify.app",
+            "screenshot": "screenshots/thehintdropper.png",
+            "status": "success"
+          },
+          {
+            "name": "resonant-baklava-be6eb1",
+            "url": "https://resonant-baklava-be6eb1.netlify.app",
+            "screenshot": "screenshots/resonant-baklava-be6eb1.png",
+            "status": "success"
+          },
+          {
+            "name": "benevolent-flan-f2c21d",
+            "url": "https://benevolent-flan-f2c21d.netlify.app",
+            "screenshot": "screenshots/benevolent-flan-f2c21d.png",
+            "status": "success"
+          },
+          {
+            "name": "famous-dragon-b0cae6",
+            "url": "https://famous-dragon-b0cae6.netlify.app",
+            "screenshot": "screenshots/famous-dragon-b0cae6.png",
+            "status": "success"
+          },
+          {
+            "name": "jolly-mooncake-7d55df",
+            "url": "https://jolly-mooncake-7d55df.netlify.app",
+            "screenshot": "screenshots/jolly-mooncake-7d55df.png",
+            "status": "success"
+          },
+          {
+            "name": "friendly-daifuku-78fd5b",
+            "url": "https://friendly-daifuku-78fd5b.netlify.app",
+            "screenshot": "screenshots/friendly-daifuku-78fd5b.png",
+            "status": "success"
+          },
+          {
+            "name": "bejewelled-kataifi-88b1d9",
+            "url": "https://bejewelled-kataifi-88b1d9.netlify.app",
+            "screenshot": "screenshots/bejewelled-kataifi-88b1d9.png",
+            "status": "success"
+          },
+          {
+            "name": "steroidbase",
+            "url": "https://steroidbase.netlify.app",
+            "screenshot": "screenshots/steroidbase.png",
+            "status": "success"
+          },
+          {
+            "name": "coruscating-cat-3a8117",
+            "url": "https://coruscating-cat-3a8117.netlify.app",
+            "screenshot": "screenshots/coruscating-cat-3a8117.png",
+            "status": "success"
+          },
+          {
+            "name": "remarkable-arithmetic",
+            "url": "https://remarkable-arithmetic-edf3e0.netlify.app",
+            "screenshot": "screenshots/remarkable-arithmetic.png",
+            "status": "success"
+          },
+          {
+            "name": "macostoolbox",
+            "url": "https://macostoolbox.netlify.app",
+            "screenshot": "screenshots/macostoolbox.png",
+            "status": "success"
+          },
+          {
+            "name": "unrivaled-douhua-5f6118",
+            "url": "https://unrivaled-douhua-5f6118.netlify.app",
+            "screenshot": "screenshots/unrivaled-douhua-5f6118.png",
+            "status": "success"
+          },
+          {
+            "name": "steroid-guide",
+            "url": "https://steroid-guide.netlify.app",
+            "screenshot": "screenshots/steroid-guide.png",
+            "status": "success"
+          },
+          {
+            "name": "clinquant-custard-ea9541",
+            "url": "https://clinquant-custard-ea9541.netlify.app",
+            "screenshot": "screenshots/clinquant-custard-ea9541.png",
+            "status": "success"
+          },
+          {
+            "name": "zingy-griffin-2aaa95",
+            "url": "https://zingy-griffin-2aaa95.netlify.app",
+            "screenshot": "screenshots/zingy-griffin-2aaa95.png",
+            "status": "success"
+          },
+          {
+            "name": "uiplaygrounddemure",
+            "url": "https://uiplaygrounddemure.netlify.app",
+            "screenshot": "screenshots/uiplaygrounddemure.png",
+            "status": "success"
+          },
+          {
+            "name": "effulgent-banoffee-0066a0",
+            "url": "https://effulgent-banoffee-0066a0.netlify.app",
+            "screenshot": "screenshots/effulgent-banoffee-0066a0.png",
+            "status": "success"
+          },
+          {
+            "name": "homebaseboard",
+            "url": "https://homebaseboard.netlify.app",
+            "screenshot": "screenshots/homebaseboard.png",
+            "status": "success"
+          },
+          {
+            "name": "extraordinary-chimera",
+            "url": "https://extraordinary-chimera-4ff070.netlify.app",
+            "screenshot": "screenshots/extraordinary-chimera.png",
+            "status": "success"
+          },
+          {
+            "name": "funny-fenglisu-88d17f",
+            "url": "https://funny-fenglisu-88d17f.netlify.app",
+            "screenshot": "screenshots/funny-fenglisu-88d17f.png",
+            "status": "success"
+          },
+          {
+            "name": "eclectic-sundae-039c2a",
+            "url": "https://eclectic-sundae-039c2a.netlify.app",
+            "screenshot": "screenshots/eclectic-sundae-039c2a.png",
+            "status": "success"
+          },
+          {
+            "name": "delicate-queijadas-815906",
+            "url": "https://delicate-queijadas-815906.netlify.app",
+            "screenshot": "screenshots/delicate-queijadas-815906.png",
+            "status": "success"
+          },
+          {
+            "name": "tiny-licorice-ce088d",
+            "url": "https://tiny-licorice-ce088d.netlify.app",
+            "screenshot": "screenshots/tiny-licorice-ce088d.png",
+            "status": "success"
+          },
+          {
+            "name": "chimerical-elf-43064a",
+            "url": "https://chimerical-elf-43064a.netlify.app",
+            "screenshot": "screenshots/chimerical-elf-43064a.png",
+            "status": "success"
+          }
+        ];
 
         // Load project data
         function loadProjects() {
@@ -1914,99 +1900,6 @@
             setTimeout(() => {
                 debugInfo.classList.remove('active');
             }, 5000);
-        }
-        
-        // Check for new Netlify deployments
-        async function checkNewDeployments() {
-            // Show loading state
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = '⏳ Checking...';
-            button.disabled = true;
-            
-            try {
-                // For now, we'll simulate adding specific new sites
-                // In a real implementation, this would call the Netlify API
-                const newSites = [
-                    {
-                        name: "blue-mountain-wicks",
-                        url: "https://blue-mountain-wicks.netlify.app",
-                        screenshot: "screenshots/blue-mountain-wicks.png",
-                        status: "success",
-                        useLivePreview: true,
-                        featured: true
-                    }
-                ];
-                
-                let addedCount = 0;
-                
-                for (const newSite of newSites) {
-                    // Check if site already exists
-                    const exists = projects.some(p => p.name === newSite.name || p.url === newSite.url);
-                    
-                    if (!exists) {
-                        // Add to site data
-                        SITE_DATA.unshift(newSite);
-                        
-                        // Add to projects array with proper settings
-                        const optimalSize = newSite.featured ? 'large' : determineOptimalSize(newSite);
-                        projects.unshift({
-                            ...newSite,
-                            size: optimalSize,
-                            roundedCorners: false
-                        });
-                        
-                        addedCount++;
-                    }
-                }
-                
-                if (addedCount > 0) {
-                    // Update stats and re-render
-                    updateStats();
-                    renderGallery();
-                    
-                    // Show success message
-                    showDebugInfo(`Added ${addedCount} new site(s) to the gallery!`);
-                    
-                    // Save to localStorage
-                    localStorage.setItem('customSiteData', JSON.stringify(SITE_DATA));
-                } else {
-                    showDebugInfo('No new sites found. All sites are already in the gallery.');
-                }
-                
-            } catch (error) {
-                console.error('Error checking for new deployments:', error);
-                showDebugInfo('Error checking for new sites. Please try again.');
-            } finally {
-                // Restore button state
-                button.textContent = originalText;
-                button.disabled = false;
-            }
-        }
-        
-        // Check for custom site data on load
-        function loadCustomSiteData() {
-            const customData = localStorage.getItem('customSiteData');
-            if (customData) {
-                try {
-                    const parsedData = JSON.parse(customData);
-                    // Merge with existing SITE_DATA
-                    for (const site of parsedData) {
-                        if (!SITE_DATA.some(s => s.name === site.name)) {
-                            SITE_DATA.unshift(site);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error loading custom site data:', error);
-                }
-            }
-        }
-        
-        // Modify the initialize function to load custom data
-        const originalInitialize = initialize;
-        function initialize() {
-            loadCustomSiteData();
-            originalInitialize();
         }
     </script>
 </body>
