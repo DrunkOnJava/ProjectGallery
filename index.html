@@ -1869,21 +1869,25 @@
             // Combine projects and icons
             let allItems = [...filteredProjects, ...filteredIcons];
             
-            // Sort to put projects first (featured at top), then icons
+            // Sort items, mixing icons with projects
             allItems.sort((a, b) => {
-                // Projects before icons
-                if (!a.type && b.type === 'icon') return -1;
-                if (a.type === 'icon' && !b.type) return 1;
-                
-                // Among projects, featured first
+                // Featured projects at the top
                 if (!a.type && !b.type) {
                     if (a.featured && !b.featured) return -1;
                     if (!a.featured && b.featured) return 1;
-                    const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
-                    return sizeOrder[a.size] - sizeOrder[b.size];
                 }
                 
-                return 0;
+                // For featured status comparison across both types
+                const aFeatured = a.featured || false;
+                const bFeatured = b.featured || false;
+                if (aFeatured && !bFeatured) return -1;
+                if (!aFeatured && bFeatured) return 1;
+                
+                // Sort by size for better visual flow
+                const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
+                const aSize = sizeOrder[a.size] || 5;
+                const bSize = sizeOrder[b.size] || 5;
+                return aSize - bSize;
             });
             
             if (allItems.length === 0) {
