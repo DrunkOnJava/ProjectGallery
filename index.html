@@ -1018,6 +1018,7 @@
         <button class="debug-button" onclick="clearAllHidden()">Clear All Hidden Projects</button>
         <button class="debug-button" onclick="resetLocalStorage()">Reset All Settings</button>
         <button class="debug-button" onclick="exportSettings()">Export Settings</button>
+        <button class="debug-button" onclick="toggleErrorFiltering()">Toggle Error Filtering</button>
         <div id="debugInfo"></div>
     </div>
 
@@ -1679,6 +1680,7 @@
                                     class="project-screenshot"
                                     id="img-${index}"
                                     loading="lazy"
+                                    onerror="this.onerror=null; handleIconImageError(this, '${item.displayName}')"
                                 />
                                 <div class="auto-size-badge">ICON</div>
                             </div>
@@ -1703,9 +1705,11 @@
                                         src="${item.url}" 
                                         class="project-iframe"
                                         id="iframe-${index}"
-                                        onload="this.previousElementSibling.style.display='none'"
-                                        sandbox="allow-scripts allow-same-origin"
+                                        onload="this.previousElementSibling.style.display='none'; this.style.opacity=1;"
+                                        onerror="handleIframeError(this, '${item.name}')"
+                                        sandbox="allow-scripts allow-same-origin allow-popups"
                                         loading="lazy"
+                                        style="opacity: 0; transition: opacity 0.3s ease;"
                                     ></iframe>` :
                                     item.screenshot && item.status === 'success' ? 
                                         `<img 
@@ -1714,6 +1718,7 @@
                                             class="project-screenshot"
                                             id="img-${index}"
                                             loading="lazy"
+                                            onerror="this.onerror=null; handleImageError(this, '${item.name}', '${item.url}')"
                                             onclick="if (!currentEditingId && !selectMode) window.open('${item.url}', '_blank')"
                                         >` :
                                         `<div class="project-placeholder">📁</div>`
@@ -1882,6 +1887,127 @@
             await loadProjects();
         }
         
+        // Error and console filtering
+        (function() {
+            // Store original console methods
+            const originalConsoleError = console.error;
+            const originalConsoleWarn = console.warn;
+            
+            // Variables to control filtering
+            let isErrorFilteringEnabled = true;
+            
+            // Make filtering state accessible globally
+            window.errorFilteringState = {
+                enabled: true,
+                toggleFiltering: function() {
+                    isErrorFilteringEnabled = !isErrorFilteringEnabled;
+                    window.errorFilteringState.enabled = isErrorFilteringEnabled;
+                    return isErrorFilteringEnabled;
+                }
+            };
+            
+            // Override console.error
+            console.error = function() {
+                const args = Array.from(arguments);
+                const errorText = args.join(' ');
+                
+                // Only filter if enabled
+                if (isErrorFilteringEnabled) {
+                    // Filter out chrome-extension errors
+                    if (errorText.includes('chrome-extension://') || 
+                        errorText.includes('extension.js') || 
+                        errorText.includes('extension/') ||
+                        errorText.includes('extensionState.js') ||
+                        errorText.includes('completion_list.html')) {
+                        // Silently ignore these errors
+                        return;
+                    }
+                    
+                    // Filter out common API failures from embedded sites
+                    if (errorText.includes('ERR_NAME_NOT_RESOLVED') ||
+                        errorText.includes('Failed to fetch') ||
+                        errorText.includes('NetworkError') ||
+                        errorText.includes('net::ERR') ||
+                        errorText.includes('401 (Unauthorized)') ||
+                        errorText.includes('404 (Not Found)') ||
+                        errorText.includes('API key') ||
+                        errorText.includes('blocked by CORS')) {
+                        // Just log a summarized version
+                        console.log('[Embedded site API error - suppressed]');
+                        return;
+                    }
+                }
+                
+                // Pass through all other errors
+                originalConsoleError.apply(console, args);
+            };
+            
+            // Override console.warn
+            console.warn = function() {
+                const args = Array.from(arguments);
+                const warnText = args.join(' ');
+                
+                // Only filter if enabled
+                if (isErrorFilteringEnabled) {
+                    // Filter out extension-related warnings
+                    if (warnText.includes('chrome-extension://') || 
+                        warnText.includes('extension.js') ||
+                        warnText.includes('extension/') ||
+                        warnText.includes('The message port closed')) {
+                        // Silently ignore these warnings
+                        return;
+                    }
+                    
+                    // Filter iframe sandbox warnings
+                    if (warnText.includes('Blocked autofocusing') ||
+                        warnText.includes('sandbox') ||
+                        warnText.includes('frame')) {
+                        return;
+                    }
+                }
+                
+                // Pass through all other warnings
+                originalConsoleWarn.apply(console, args);
+            };
+            
+            // Handle errors from iframes
+            window.addEventListener('error', function(e) {
+                // Only filter if enabled
+                if (isErrorFilteringEnabled) {
+                    // If the error is from an iframe, prevent it from bubbling up
+                    if (e.target && (e.target.tagName === 'IFRAME' || e.target.nodeName === 'IFRAME')) {
+                        console.log('[Embedded site error suppressed]');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+            }, true); // Capture phase
+            
+            // Suppress unhandled promise rejections from iframes
+            window.addEventListener('unhandledrejection', function(e) {
+                // Only filter if enabled
+                if (isErrorFilteringEnabled) {
+                    // Check if the rejection is from an iframe resource
+                    if (e.reason && (
+                        (e.reason.message && e.reason.message.includes('http')) ||
+                        (e.reason.stack && e.reason.stack.includes('http'))
+                    )) {
+                        console.log('[Embedded site promise rejection suppressed]');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+            });
+        })();
+        
+        // Toggle error filtering
+        function toggleErrorFiltering() {
+            const enabled = window.errorFilteringState.toggleFiltering();
+            showDebugInfo(`Error filtering ${enabled ? 'enabled' : 'disabled'}`);
+        }
+        
         // Start initialization when document is loaded
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initialize);
@@ -1983,6 +2109,117 @@
                 // Reload all projects
                 loadProjects();
             }
+        }
+        
+        // Handle iframe loading errors
+        function handleIframeError(iframe, projectName) {
+            console.warn(`Error loading iframe for ${projectName}`);
+            
+            // Get the parent container and card
+            const container = iframe.parentElement;
+            const card = container.closest('.project-card');
+            
+            // Hide the loading spinner
+            const loadingSpinner = container.querySelector('.iframe-loading');
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            
+            // Show a fallback placeholder
+            iframe.style.display = 'none';
+            
+            // Create a fallback element
+            const fallback = document.createElement('div');
+            fallback.className = 'project-placeholder';
+            fallback.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📱</div>
+                    <div style="font-size: 0.8rem; color: #888;">Preview unavailable</div>
+                    <div style="font-size: 0.75rem; margin-top: 0.5rem;">
+                        <a href="${iframe.src}" target="_blank" style="color: #06b6d4; text-decoration: underline;">Visit site</a>
+                    </div>
+                </div>
+            `;
+            
+            // Add to container
+            container.appendChild(fallback);
+            
+            // Update project state to not use live preview in the future
+            const project = projects.find(p => p.name === projectName);
+            if (project) {
+                project.useLivePreview = false;
+                saveProjectState(projectName, {
+                    size: project.size,
+                    roundedCorners: project.roundedCorners,
+                    useLivePreview: false
+                });
+            }
+            
+            // Log the error in debug
+            showDebugInfo(`Disabled live preview for ${projectName} due to loading errors.`);
+        }
+        
+        // Handle screenshot image loading errors
+        function handleImageError(img, projectName, projectUrl) {
+            console.warn(`Error loading screenshot for ${projectName}`);
+            
+            // Get the parent container
+            const container = img.parentElement;
+            
+            // Replace the image with a placeholder
+            const placeholder = document.createElement('div');
+            placeholder.className = 'project-placeholder';
+            placeholder.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖼️</div>
+                    <div style="font-size: 0.8rem; color: #888;">Image unavailable</div>
+                    <div style="font-size: 0.75rem; margin-top: 0.5rem;">
+                        <a href="${projectUrl}" target="_blank" style="color: #06b6d4; text-decoration: underline;">Visit site</a>
+                    </div>
+                </div>
+            `;
+            
+            // Replace the image
+            img.style.display = 'none';
+            container.appendChild(placeholder);
+            
+            // Log the error
+            showDebugInfo(`Could not load screenshot for ${projectName}.`);
+            
+            // Try enabling live preview for next time if not already enabled
+            const project = projects.find(p => p.name === projectName);
+            if (project && !project.useLivePreview) {
+                project.useLivePreview = true;
+                saveProjectState(projectName, {
+                    size: project.size,
+                    roundedCorners: project.roundedCorners,
+                    useLivePreview: true
+                });
+                showDebugInfo(`Enabling live preview for ${projectName} for next visit.`);
+            }
+        }
+        
+        // Handle icon image loading errors
+        function handleIconImageError(img, iconName) {
+            console.warn(`Error loading icon for ${iconName}`);
+            
+            // Get the parent container
+            const container = img.parentElement;
+            
+            // Create placeholder
+            const placeholder = document.createElement('div');
+            placeholder.className = 'project-placeholder';
+            placeholder.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎨</div>
+                    <div style="font-size: 0.8rem; color: #888;">${iconName}</div>
+                </div>
+            `;
+            
+            // Replace the image
+            img.style.display = 'none';
+            container.appendChild(placeholder);
+            
+            // Log the error
+            showDebugInfo(`Could not load icon: ${iconName}`);
         }
         
         // Debugging functions
