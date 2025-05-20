@@ -423,9 +423,42 @@
             height: 100%;
         }
         
-        /* Icon cards - square */
-        .project-card.icon-square { 
+        /* Icon cards - various sizes */
+        .project-card.icon-tiny {
             grid-row: span 1;
+            height: 100%;
+            aspect-ratio: 1;
+        }
+        
+        .project-card.icon-small {
+            grid-row: span 2;
+            height: 100%;
+            aspect-ratio: 1;
+        }
+        
+        .project-card.icon-medium { 
+            grid-row: span 2;
+            grid-column: span 1;
+            height: 100%;
+            aspect-ratio: 1;
+        }
+        
+        .project-card.icon-large { 
+            grid-row: span 3;
+            grid-column: span 1;
+            height: 100%;
+            aspect-ratio: 1;
+        }
+        
+        .project-card.icon-wide {
+            grid-row: span 2;
+            grid-column: span 2;
+            height: 100%;
+        }
+        
+        .project-card.icon-square { 
+            grid-row: span 3;
+            grid-column: span 3;
             height: 100%;
             aspect-ratio: 1;
         }
@@ -727,8 +760,9 @@
         /* Size selector */
         .size-selector {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 0.5rem;
+            max-width: 100%;
         }
 
         .size-button {
@@ -1403,9 +1437,14 @@
         ];
 
         // Load project data
-        function loadProjects() {
+        async function loadProjects() {
             try {
-                const data = SITE_DATA;
+                // Fetch the site data from the JSON file
+                const response = await fetch('site-data.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch site data: ${response.status} ${response.statusText}`);
+                }
+                const data = await response.json();
                 
                 // Filter out hidden projects and merge with saved states
                 projects = data
@@ -1429,7 +1468,37 @@
                 loadAppIcons();
             } catch (error) {
                 console.error('Error loading projects:', error);
-                document.getElementById('gallery').innerHTML = '<div class="loading">Error loading projects</div>';
+                document.getElementById('gallery').innerHTML = '<div class="loading">Error loading projects: ' + error.message + '</div>';
+                document.getElementById('debugInfo').textContent = `Error loading projects: ${error.message}`;
+                document.getElementById('debugInfo').classList.add('active');
+                
+                // Fallback to embedded data if fetch fails
+                if (typeof SITE_DATA !== 'undefined') {
+                    console.log('Falling back to embedded site data');
+                    projects = SITE_DATA
+                        .filter(project => !hiddenProjects.includes(project.name))
+                        .map(project => {
+                            const savedState = projectStates[project.name] || {};
+                            const optimalSize = determineOptimalSize(project);
+                            
+                            return {
+                                ...project,
+                                size: savedState.size || optimalSize,
+                                roundedCorners: savedState.roundedCorners || false,
+                                featured: featuredProjects.includes(project.name),
+                                useLivePreview: savedState.useLivePreview !== false
+                            };
+                        });
+                    
+                    updateStats();
+                    renderGallery();
+                    loadAppIcons();
+                }
+                
+                // Hide debug info after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('debugInfo').classList.remove('active');
+                }, 5000);
             }
         }
 
@@ -1483,6 +1552,9 @@
             try {
                 // Load icons configuration
                 const response = await fetch('icons-config.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch icons config: ${response.status} ${response.statusText}`);
+                }
                 const config = await response.json();
                 APP_ICONS = config.icons;
                 
@@ -1501,6 +1573,9 @@
                 renderGallery();
             } catch (error) {
                 console.error('Error loading app icons:', error);
+                document.getElementById('debugInfo').textContent = `Error loading app icons: ${error.message}`;
+                document.getElementById('debugInfo').classList.add('active');
+                
                 // Fall back to embedded icons if config fails
                 APP_ICONS = [
                     { name: 'app-icon-1', displayName: 'App Icon 1' },
@@ -1531,6 +1606,11 @@
                 });
                 updateStats();
                 renderGallery();
+                
+                // Hide debug info after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('debugInfo').classList.remove('active');
+                }, 5000);
             }
         }
 
@@ -1692,7 +1772,7 @@
             
             if (currentEditingType === 'icon') {
                 item = appIcons.find(i => i.name === currentEditingId);
-                sizeOptions = ['icon-medium', 'icon-large'];
+                sizeOptions = ['icon-tiny', 'icon-small', 'icon-medium', 'icon-large', 'icon-wide', 'icon-square'];
             } else {
                 item = projects.find(p => p.name === currentEditingId);
                 sizeOptions = ['tiny', 'small', 'medium', 'tall', 'wide', 'large', 'xlarge'];
@@ -1719,7 +1799,7 @@
                     <div class="size-selector">
                         ${sizeOptions.map(size => 
                             `<button class="size-button ${item.size === size ? 'active' : ''}" 
-                                     onclick="updateItem('size', '${size}')">${size.replace('icon-', '')}</button>`
+                                     onclick="updateItem('size', '${size}')">${formatSizeName(size)}</button>`
                         ).join('')}
                     </div>
                 </div>
@@ -1751,6 +1831,13 @@
                     </button>
                 ` : ''}
             `;
+        }
+
+        // Format size name for display
+        function formatSizeName(size) {
+            // Convert hyphenated names to space-separated and capitalize first letter
+            const formatted = size.replace(/-/g, ' ').replace(/^\w/, c => c.toUpperCase());
+            return formatted;
         }
 
         // Update item
@@ -1791,11 +1878,16 @@
         document.getElementById('searchInput')?.addEventListener('input', renderGallery);
 
         // Initialize
-        function initialize() {
-            loadProjects();
+        async function initialize() {
+            await loadProjects();
         }
         
-        initialize();
+        // Start initialization when document is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initialize);
+        } else {
+            initialize();
+        }
 
         // Refresh all iframes every 5 minutes to keep previews current
         setInterval(() => {

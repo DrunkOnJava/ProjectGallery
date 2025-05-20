@@ -2,10 +2,11 @@
   {
     "name": "blue-mountain-wicks",
     "url": "https://blue-mountain-wicks.netlify.app",
-    "screenshot": "screenshots/blue-mountain-wicks.png",
+    "screenshot": null,
     "status": "success",
     "useLivePreview": true,
-    "featured": true
+    "featured": true,
+    "size": "large"
   },
   {
     "name": "scintillating-torrone-19b562",
