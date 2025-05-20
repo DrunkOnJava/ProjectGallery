@@ -1884,56 +1884,66 @@
                 );
             }
             
-            // Use a completely different approach to mix icons and projects
-            // First, separate featured projects
+            // Complete rewrite of the card distribution algorithm
             const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
             let featuredProjects = filteredProjects.filter(p => p.featured);
+            let regularProjects = filteredProjects.filter(p => !p.featured);
             
-            // Then create a single array with remaining projects and all icons
-            let normalItems = [
-                ...filteredProjects.filter(p => !p.featured),
-                ...filteredIcons
-            ];
+            // FORCE an even distribution with precise placement of icons
+            let allItems = [];
             
-            // Mark each item with its type for CSS
-            normalItems.forEach(item => {
+            // Add featured projects first
+            if (featuredProjects.length > 0) {
+                allItems.push(...featuredProjects);
+            }
+            
+            // For truly interleaving icons with projects, we'll place an icon
+            // every N projects, where N depends on the ratio of icons to projects
+            if (filteredIcons.length > 0 && regularProjects.length > 0) {
+                // Calculate ideal spacing - place one icon every X projects
+                // At minimum, place an icon after every 3 projects, even if we run out
+                const iconSpacing = Math.max(1, Math.min(3, Math.floor(regularProjects.length / filteredIcons.length)));
+                
+                // Create the interleaved array
+                let iconIndex = 0;
+                let projectIndex = 0;
+                
+                // Start with an icon to ensure they're visible near the top
+                if (filteredIcons.length > 0) {
+                    allItems.push(filteredIcons[iconIndex++]);
+                }
+                
+                // Add projects with icons interspersed
+                while (projectIndex < regularProjects.length) {
+                    // Add 'iconSpacing' number of projects
+                    for (let i = 0; i < iconSpacing && projectIndex < regularProjects.length; i++) {
+                        allItems.push(regularProjects[projectIndex++]);
+                    }
+                    
+                    // Add an icon if available
+                    if (iconIndex < filteredIcons.length) {
+                        allItems.push(filteredIcons[iconIndex++]);
+                    }
+                }
+                
+                // Add any remaining icons at the end if there are any left
+                while (iconIndex < filteredIcons.length) {
+                    allItems.push(filteredIcons[iconIndex++]);
+                }
+            } else {
+                // If no icons or no regular projects, just add whatever is available
+                allItems.push(...regularProjects);
+                allItems.push(...filteredIcons);
+            }
+            
+            // Mark items with their type for CSS
+            allItems.forEach(item => {
                 if (item.type === 'icon') {
                     item.itemType = 'icon-card';
                 } else {
                     item.itemType = 'project-card';
                 }
             });
-            
-            // Sort all normal items by size to avoid strange layouts
-            normalItems.sort((a, b) => {
-                // Get size values, handling icons with different size naming
-                let aSize = sizeOrder[a.size] || 5;
-                let bSize = sizeOrder[b.size] || 5;
-                
-                // Mix icons and projects of similar sizes
-                if (Math.abs(aSize - bSize) <= 1) {
-                    // Randomly determine order for similar sized items
-                    return Math.random() - 0.5;
-                }
-                
-                // Otherwise sort by size
-                return aSize - bSize;
-            });
-            
-            // Combine all items: featured projects first, then the mixed normal items
-            let allItems = [...featuredProjects, ...normalItems];
-            
-            // Ensure we have at least one icon in the first few items
-            if (filteredIcons.length > 0 && allItems.length > 5) {
-                // Find the first icon
-                const firstIconIndex = allItems.findIndex(item => item.type === 'icon');
-                
-                if (firstIconIndex > 4) {
-                    // Move an icon to position 3 if all icons are too far down
-                    const icon = allItems.splice(firstIconIndex, 1)[0];
-                    allItems.splice(3, 0, icon);
-                }
-            }
             
             if (allItems.length === 0) {
                 gallery.innerHTML = '<div class="loading">No items found</div>';
