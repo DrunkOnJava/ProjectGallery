@@ -429,12 +429,14 @@
             grid-row: span 1;
             height: 100%;
             aspect-ratio: 1;
+            margin-bottom: 0.5rem; /* Add margin to prevent overlap */
         }
         
         .project-card.icon-small {
-            grid-row: span 2;
+            grid-row: span 1; /* Reduced from 2 to prevent overlap */
             height: 100%;
             aspect-ratio: 1;
+            margin-bottom: 0.5rem;
         }
         
         .project-card.icon-medium { 
@@ -442,26 +444,30 @@
             grid-column: span 1;
             height: 100%;
             aspect-ratio: 1;
+            margin-bottom: 0.5rem;
         }
         
         .project-card.icon-large { 
-            grid-row: span 3;
+            grid-row: span 2; /* Reduced from 3 to prevent overlap */
             grid-column: span 1;
             height: 100%;
             aspect-ratio: 1;
+            margin-bottom: 0.5rem;
         }
         
         .project-card.icon-wide {
             grid-row: span 2;
-            grid-column: span 2;
+            grid-column: span 1; /* Reduced from 2 to be more compact */
             height: 100%;
+            margin-bottom: 0.5rem;
         }
         
         .project-card.icon-square { 
-            grid-row: span 3;
-            grid-column: span 3;
+            grid-row: span 2; /* Reduced from 3 to prevent overlap */
+            grid-column: span 2; /* Reduced from 3 to be more compact */
             height: 100%;
             aspect-ratio: 1;
+            margin-bottom: 0.5rem;
         }
 
         /* Featured projects */
@@ -1878,41 +1884,54 @@
                 );
             }
             
-            // Interleave projects and icons for better visual distribution
-            let orderedProjects = [];
-            let featuredProjects = filteredProjects.filter(p => p.featured);
-            let regularProjects = filteredProjects.filter(p => !p.featured);
-            
-            // Sort projects by size
+            // Use a completely different approach to mix icons and projects
+            // First, separate featured projects
             const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
-            featuredProjects.sort((a, b) => sizeOrder[a.size] - sizeOrder[b.size]);
-            regularProjects.sort((a, b) => sizeOrder[a.size] - sizeOrder[b.size]);
+            let featuredProjects = filteredProjects.filter(p => p.featured);
             
-            // Sort icons by size
-            filteredIcons.sort((a, b) => {
-                const aSize = sizeOrder[a.size] || 5;
-                const bSize = sizeOrder[b.size] || 5;
+            // Then create a single array with remaining projects and all icons
+            let normalItems = [
+                ...filteredProjects.filter(p => !p.featured),
+                ...filteredIcons
+            ];
+            
+            // Mark each item with its type for CSS
+            normalItems.forEach(item => {
+                if (item.type === 'icon') {
+                    item.itemType = 'icon-card';
+                } else {
+                    item.itemType = 'project-card';
+                }
+            });
+            
+            // Sort all normal items by size to avoid strange layouts
+            normalItems.sort((a, b) => {
+                // Get size values, handling icons with different size naming
+                let aSize = sizeOrder[a.size] || 5;
+                let bSize = sizeOrder[b.size] || 5;
+                
+                // Mix icons and projects of similar sizes
+                if (Math.abs(aSize - bSize) <= 1) {
+                    // Randomly determine order for similar sized items
+                    return Math.random() - 0.5;
+                }
+                
+                // Otherwise sort by size
                 return aSize - bSize;
             });
             
-            // Interleave projects and icons (1 featured project, 1 icon, 2 regular projects, 1 icon, etc.)
-            let allItems = [];
-            let iconIndex = 0;
-            let regularIndex = 0;
+            // Combine all items: featured projects first, then the mixed normal items
+            let allItems = [...featuredProjects, ...normalItems];
             
-            // Add all featured projects first
-            allItems.push(...featuredProjects);
-            
-            // Then interleave regular projects with icons
-            while (regularIndex < regularProjects.length || iconIndex < filteredIcons.length) {
-                // Add an icon
-                if (iconIndex < filteredIcons.length) {
-                    allItems.push(filteredIcons[iconIndex++]);
-                }
+            // Ensure we have at least one icon in the first few items
+            if (filteredIcons.length > 0 && allItems.length > 5) {
+                // Find the first icon
+                const firstIconIndex = allItems.findIndex(item => item.type === 'icon');
                 
-                // Add two regular projects (if available)
-                for (let i = 0; i < 2 && regularIndex < regularProjects.length; i++) {
-                    allItems.push(regularProjects[regularIndex++]);
+                if (firstIconIndex > 4) {
+                    // Move an icon to position 3 if all icons are too far down
+                    const icon = allItems.splice(firstIconIndex, 1)[0];
+                    allItems.splice(3, 0, icon);
                 }
             }
             
