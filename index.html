@@ -381,6 +381,7 @@
             grid-auto-rows: 120px;
             gap: 1.5rem;
             grid-auto-flow: dense;
+            padding-bottom: 3rem; /* Add padding at the bottom to prevent cutoff */
         }
 
         /* Project Cards */
@@ -1866,29 +1867,43 @@
                 );
             }
             
-            // Combine projects and icons
-            let allItems = [...filteredProjects, ...filteredIcons];
+            // Interleave projects and icons for better visual distribution
+            let orderedProjects = [];
+            let featuredProjects = filteredProjects.filter(p => p.featured);
+            let regularProjects = filteredProjects.filter(p => !p.featured);
             
-            // Sort items, mixing icons with projects
-            allItems.sort((a, b) => {
-                // Featured projects at the top
-                if (!a.type && !b.type) {
-                    if (a.featured && !b.featured) return -1;
-                    if (!a.featured && b.featured) return 1;
-                }
-                
-                // For featured status comparison across both types
-                const aFeatured = a.featured || false;
-                const bFeatured = b.featured || false;
-                if (aFeatured && !bFeatured) return -1;
-                if (!aFeatured && bFeatured) return 1;
-                
-                // Sort by size for better visual flow
-                const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
+            // Sort projects by size
+            const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
+            featuredProjects.sort((a, b) => sizeOrder[a.size] - sizeOrder[b.size]);
+            regularProjects.sort((a, b) => sizeOrder[a.size] - sizeOrder[b.size]);
+            
+            // Sort icons by size
+            filteredIcons.sort((a, b) => {
                 const aSize = sizeOrder[a.size] || 5;
                 const bSize = sizeOrder[b.size] || 5;
                 return aSize - bSize;
             });
+            
+            // Interleave projects and icons (1 featured project, 1 icon, 2 regular projects, 1 icon, etc.)
+            let allItems = [];
+            let iconIndex = 0;
+            let regularIndex = 0;
+            
+            // Add all featured projects first
+            allItems.push(...featuredProjects);
+            
+            // Then interleave regular projects with icons
+            while (regularIndex < regularProjects.length || iconIndex < filteredIcons.length) {
+                // Add an icon
+                if (iconIndex < filteredIcons.length) {
+                    allItems.push(filteredIcons[iconIndex++]);
+                }
+                
+                // Add two regular projects (if available)
+                for (let i = 0; i < 2 && regularIndex < regularProjects.length; i++) {
+                    allItems.push(regularProjects[regularIndex++]);
+                }
+            }
             
             if (allItems.length === 0) {
                 gallery.innerHTML = '<div class="loading">No items found</div>';
@@ -2454,6 +2469,27 @@
             dashboard.classList.toggle('active');
             
             if (dashboard.classList.contains('active')) {
+                // Start collecting errors if we're not already
+                if (window.errorCollection.getTotalCount() === 0) {
+                    // Add some initial test errors if there are none
+                    window.errorCollection.addError(
+                        'Test error to verify dashboard is working',
+                        'dashboard-test',
+                        new Date().toISOString()
+                    );
+                    
+                    // Force iframes to reload to capture their errors
+                    document.querySelectorAll('iframe').forEach(iframe => {
+                        if (iframe.src) {
+                            const currentSrc = iframe.src;
+                            iframe.src = '';
+                            setTimeout(() => {
+                                iframe.src = currentSrc;
+                            }, 100);
+                        }
+                    });
+                }
+                
                 updateErrorDashboard();
                 // Set up auto-refresh
                 if (!window.errorDashboardInterval) {
