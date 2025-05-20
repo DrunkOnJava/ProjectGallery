@@ -1,0 +1,9 @@
+/* Main CSS file that imports all the modular CSS files */
+@import 'reset.css';
+@import 'header.css';
+@import 'controls.css';
+@import 'gallery.css';
+@import 'edit-panel.css';
+@import 'multi-select.css';
+@import 'debug.css';
+@import 'responsive.css';

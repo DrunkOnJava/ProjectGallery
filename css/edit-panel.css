@@ -1,0 +1,127 @@
+/* Edit Panel */
+.edit-panel {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    background: #1e1e1e;
+    border-left: 1px solid #333;
+    transition: right 0.3s;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 2rem;
+}
+
+.edit-panel.active {
+    right: 0;
+}
+
+.close-panel {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-panel:hover {
+    color: #fff;
+}
+
+.edit-group {
+    margin-bottom: 1.5rem;
+}
+
+.edit-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.edit-input {
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.zoom-slider {
+    width: 100%;
+    margin-top: 0.5rem;
+    appearance: none;
+    height: 6px;
+    background: #2a2a2a;
+    outline: none;
+    border-radius: 3px;
+}
+
+.zoom-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #06b6d4;
+    cursor: pointer;
+}
+
+/* Size selector */
+.size-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    max-width: 100%;
+}
+
+.size-button {
+    padding: 0.5rem;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.size-button:hover {
+    border-color: #06b6d4;
+}
+
+.size-button.active {
+    background: #06b6d4;
+    border-color: #06b6d4;
+}
+
+/* Checkbox */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Refresh button */
+.refresh-button {
+    padding: 0.5rem 1rem;
+    background: #06b6d4;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.refresh-button:hover {
+    background: #0891b2;
+}

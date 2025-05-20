@@ -1,0 +1,60 @@
+/* Multi-select mode */
+.multi-select-controls {
+    display: none;
+    gap: 1rem;
+    align-items: center;
+}
+
+.multi-select-controls.active {
+    display: flex;
+}
+
+.select-mode-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #ef4444;
+    border: none;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.select-mode-button:hover {
+    background-color: #dc2626;
+}
+
+.hide-selected-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #10b981;
+    border: none;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hide-selected-button:hover {
+    background-color: #059669;
+}
+
+.cancel-select-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #6b7280;
+    border: none;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-select-button:hover {
+    background-color: #4b5563;
+}
+
+.selected-count {
+    color: #ffffff;
+    font-weight: 600;
+}

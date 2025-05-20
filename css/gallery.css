@@ -1,0 +1,379 @@
+/* Grid Gallery */
+.gallery {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-auto-rows: 140px; /* Increased from 120px to give more vertical space */
+    gap: 2rem; /* Increased from 1.5rem to provide more space between cards */
+    grid-auto-flow: dense;
+    padding-bottom: 5rem; /* Added more padding at the bottom */
+}
+
+/* Project Cards */
+.project-card {
+    background-color: #1a1a1a;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid #333;
+}
+
+/* Card sizes - Single cells */
+.project-card.tiny { grid-row: span 1; }
+.project-card.small { grid-row: span 2; }
+.project-card.medium { grid-row: span 3; }
+
+/* Multi-cell cards */
+.project-card.tall { 
+    grid-row: span 4;
+    height: 100%;
+}
+
+.project-card.wide { 
+    grid-column: span 2;
+    grid-row: span 2;
+    height: 100%;
+}
+
+.project-card.large {
+    grid-column: span 2;
+    grid-row: span 3;
+    height: 100%;
+}
+
+.project-card.xlarge {
+    grid-column: span 3;
+    grid-row: span 4;
+    height: 100%;
+}
+
+/* Icon cards - various sizes */
+.project-card.icon-tiny {
+    grid-row: span 1;
+    height: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 0.5rem; /* Add margin to prevent overlap */
+}
+
+.project-card.icon-small {
+    grid-row: span 1; /* Reduced from 2 to prevent overlap */
+    height: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 0.5rem;
+}
+
+.project-card.icon-medium { 
+    grid-row: span 2;
+    grid-column: span 1;
+    height: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 0.5rem;
+}
+
+.project-card.icon-large { 
+    grid-row: span 2; /* Reduced from 3 to prevent overlap */
+    grid-column: span 1;
+    height: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 0.5rem;
+}
+
+.project-card.icon-wide {
+    grid-row: span 2;
+    grid-column: span 1; /* Reduced from 2 to be more compact */
+    height: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.project-card.icon-square { 
+    grid-row: span 2; /* Reduced from 3 to prevent overlap */
+    grid-column: span 2; /* Reduced from 3 to be more compact */
+    height: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 0.5rem;
+}
+
+/* Featured projects */
+.project-card.featured {
+    grid-column: span 2;
+    grid-row: span 3;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border-color: #06b6d4;
+}
+
+.project-card.editing {
+    outline: 3px solid #06b6d4;
+}
+
+/* Selected cards */
+.project-card.selected {
+    outline: 3px solid #ef4444;
+    outline-offset: -3px;
+}
+
+.project-card.selecting {
+    cursor: pointer;
+}
+
+.project-card.selecting:hover {
+    outline: 3px solid rgba(239, 68, 68, 0.5);
+    outline-offset: -3px;
+}
+
+/* Image Container */
+.image-container {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Live iframe preview */
+.project-iframe {
+    position: absolute;
+    width: 400%;
+    height: 400%;
+    border: none;
+    transform: scale(0.25);
+    transform-origin: 0 0;
+    pointer-events: none;
+    background: #0a0a0a;
+}
+
+.project-screenshot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: grab;
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.project-screenshot.fit-contain {
+    object-fit: contain;
+    padding: 1rem;
+}
+
+/* Icon-specific styling */
+.project-card.icon-square .project-screenshot {
+    object-fit: cover;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.project-screenshot.fit-fill {
+    object-fit: fill;
+}
+
+.project-card.editing .project-screenshot {
+    cursor: grab;
+}
+
+.project-card.editing .project-screenshot.dragging {
+    cursor: grabbing;
+}
+
+.project-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #64748b;
+    font-size: 3rem;
+}
+
+/* Loading spinner for iframes */
+.iframe-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: #06b6d4;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Overlay */
+.project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.project-card:hover .project-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.project-card.editing .project-overlay {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.project-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+    line-height: 1.3;
+}
+
+.project-card.large .project-name,
+.project-card.xlarge .project-name {
+    font-size: 1.5rem;
+}
+
+.project-url {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+    word-break: break-all;
+    opacity: 0.8;
+}
+
+.project-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.action-button {
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+}
+
+.action-button:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.action-button.primary {
+    background: #06b6d4;
+    border-color: #06b6d4;
+}
+
+.action-button.primary:hover {
+    background: #0891b2;
+}
+
+.action-button.danger {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.action-button.danger:hover {
+    background: #b91c1c;
+}
+
+/* Remove button */
+.remove-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    background: rgba(220, 38, 38, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.project-card:hover .remove-button {
+    opacity: 1;
+}
+
+.remove-button:hover {
+    background: rgba(185, 28, 28, 0.9);
+    transform: scale(1.1);
+}
+
+/* Auto-size badge */
+.auto-size-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: rgba(6,182,212,0.9);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.project-card:hover .auto-size-badge {
+    opacity: 1;
+}
+
+/* Rounded corners */
+.project-card.rounded-corners {
+    border-radius: 24px;
+}
+
+.project-card.rounded-corners .image-container {
+    border-radius: 24px;
+}
+
+/* Loading indicator */
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+}
+
+.stats {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #6b7280;
+}
+
+.stats-number {
+    color: #06b6d4;
+    font-weight: 700;
+    font-size: 1.5rem;
+}

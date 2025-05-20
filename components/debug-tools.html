@@ -1,0 +1,27 @@
+<div class="debugging-tools">
+    <h3>Debugging Tools</h3>
+    
+    <div class="debug-buttons">
+        <button class="debug-button" onclick="document.getElementById('debugInfo').classList.toggle('active')">Toggle Debug Log</button>
+        <button class="debug-button" onclick="document.getElementById('errorDashboard').classList.toggle('active')">Toggle Error Dashboard</button>
+        <button class="debug-button primary" onclick="document.getElementById('debugInfo').textContent = ''">Clear Debug Log</button>
+    </div>
+    
+    <div id="debugInfo"></div>
+    
+    <div id="errorDashboard" class="error-dashboard">
+        <div class="error-dashboard-header">
+            <h4>Error Dashboard</h4>
+            <div id="errorStats" class="error-stats"></div>
+            <div class="error-dashboard-tabs">
+                <div class="error-tab active" data-tab="all" onclick="renderErrorList('all')">All Errors</div>
+                <div class="error-tab" data-tab="iframe" onclick="renderErrorList('iframe')">Iframe Errors</div>
+                <div class="error-tab" data-tab="network" onclick="renderErrorList('network')">Network Errors</div>
+                <div class="error-tab" data-tab="js" onclick="renderErrorList('js')">JavaScript Errors</div>
+            </div>
+        </div>
+        <div class="error-dashboard-content">
+            <div id="errorList" class="error-list"></div>
+        </div>
+    </div>
+</div>

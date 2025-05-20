@@ -1,0 +1,31 @@
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .header p {
+        font-size: 1.25rem;
+    }
+
+    .controls {
+        gap: 0.5rem;
+    }
+    
+    /* Adjust multi-column cards on mobile */
+    .project-card.wide,
+    .project-card.large,
+    .project-card.xlarge {
+        grid-column: span 1;
+    }
+    
+    /* Adjust tall cards on mobile */
+    .project-card.tall {
+        grid-row: span 3;
+    }
+}

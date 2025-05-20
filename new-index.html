@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Netlify Projects Gallery</title>
+    <meta name="description" content="A gallery of web development projects deployed on Netlify">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-container"></div>
+    
+    <!-- Controls Component -->
+    <div id="controls-container"></div>
+    
+    <!-- Stats Display -->
+    <div class="stats">
+        <span id="failedCount">0</span> failed deployments
+    </div>
+    
+    <!-- Gallery Component -->
+    <div id="gallery-container"></div>
+    
+    <!-- Edit Panel Component -->
+    <div id="edit-panel-container"></div>
+    
+    <!-- Debug Tools Component -->
+    <div id="debug-tools-container"></div>
+    
+    <!-- Load Components -->
+    <script>
+        // Load HTML components
+        fetch('components/header.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('header-container').innerHTML = html);
+            
+        fetch('components/controls.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('controls-container').innerHTML = html);
+            
+        fetch('components/gallery.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('gallery-container').innerHTML = html);
+            
+        fetch('components/edit-panel.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('edit-panel-container').innerHTML = html);
+            
+        fetch('components/debug-tools.html')
+            .then(response => response.text())
+            .then(html => document.getElementById('debug-tools-container').innerHTML = html);
+    </script>
+    
+    <!-- Load embedded data from original site -->
+    <script>
+        // Extract data from the original index.html
+        // In a real application, this would be fetched from an API
+        
+        // This is a temporary script to extract data from the monolithic version
+        fetch('index.html')
+            .then(response => response.text())
+            .then(html => {
+                // Extract SITE_DATA
+                const siteDataMatch = html.match(/const SITE_DATA = (\[[\s\S]*?\]);/);
+                if (siteDataMatch && siteDataMatch[1]) {
+                    const siteDataScript = document.createElement('script');
+                    siteDataScript.textContent = `
+                        // Extract SITE_DATA from original file
+                        import { setEmbeddedData } from './js/data-loader.js';
+                        const SITE_DATA = ${siteDataMatch[1]};
+                        
+                        // Extract APP_ICONS
+                        const APP_ICONS = ${html.match(/const APP_ICONS = (\[[\s\S]*?\]);/)[1] || '[]'};
+                        
+                        // Set the data
+                        setEmbeddedData(SITE_DATA, APP_ICONS);
+                    `;
+                    siteDataScript.type = 'module';
+                    document.body.appendChild(siteDataScript);
+                }
+            });
+    </script>
+    
+    <!-- Load main JavaScript module with polyfill for older browsers -->
+    <script type="module" src="js/main.js"></script>
+    <script nomodule src="js/polyfills.js"></script>
+</body>
+</html>

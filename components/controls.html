@@ -1,0 +1,13 @@
+<div class="controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search projects...">
+    <button id="filterAll" class="filter-button active" onclick="filterProjects('all')">All</button>
+    <button id="filterSuccess" class="filter-button" onclick="filterProjects('success')">Success</button>
+    <button id="filterFailed" class="filter-button" onclick="filterProjects('failed')">Failed</button>
+    <button class="filter-button select-mode-button" onclick="toggleSelectMode()">Select Multiple</button>
+    
+    <div id="multiSelectControls" class="multi-select-controls">
+        <span class="selected-count" id="selectedCount">0</span> selected
+        <button class="hide-selected-button" onclick="hideSelected()">Hide Selected</button>
+        <button class="cancel-select-button" onclick="cancelSelectMode()">Cancel</button>
+    </div>
+</div>
