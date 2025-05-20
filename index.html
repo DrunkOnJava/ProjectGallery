@@ -378,10 +378,10 @@
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            grid-auto-rows: 120px;
-            gap: 1.5rem;
+            grid-auto-rows: 140px; /* Increased from 120px to give more vertical space */
+            gap: 2rem; /* Increased from 1.5rem to provide more space between cards */
             grid-auto-flow: dense;
-            padding-bottom: 3rem; /* Add padding at the bottom to prevent cutoff */
+            padding-bottom: 5rem; /* Added more padding at the bottom */
         }
 
         /* Project Cards */
@@ -891,6 +891,16 @@
             border-color: #06b6d4;
         }
         
+        .debug-button.primary {
+            background-color: #06b6d4;
+            color: #fff;
+            border-color: #06b6d4;
+        }
+        
+        .debug-button.primary:hover {
+            background-color: #0891b2;
+        }
+        
         #debugInfo {
             margin-top: 1rem;
             padding: 1rem;
@@ -1202,6 +1212,7 @@
             <button class="debug-button" onclick="toggleErrorDashboard()">Toggle Error Dashboard</button>
             <button class="debug-button" onclick="exportErrorLogs()">Export Error Logs</button>
             <button class="debug-button" onclick="clearErrorLogs()">Clear Error Logs</button>
+            <button class="debug-button primary" onclick="addSampleErrors()">Load Sample Errors</button>
         </div>
         <div id="debugInfo"></div>
         
@@ -2787,11 +2798,149 @@ Possible fixes:
             showDebugInfo('Error logs cleared');
         }
         
+        // Add sample errors from the specific errors you provided
+        function addSampleErrors() {
+            // Clear any existing errors first
+            window.errorCollection.clearAll();
+            
+            // Add real errors from the sites you provided
+            window.errorCollection.addError(
+                'GET https://bejewelled-crostata-2737b4.netlify.app/images/Blue-Mountain-Rd.png 404 (Not Found)',
+                'https://bejewelled-crostata-2737b4.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://bejewelled-crostata-2737b4.netlify.app/images/Blue-Mountain-Rescue.png 404 (Not Found)',
+                'https://bejewelled-crostata-2737b4.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://bejewelled-crostata-2737b4.netlify.app/images/FREEDOM-Disposal.png 404 (Not Found)',
+                'https://bejewelled-crostata-2737b4.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://myfitlifepro.netlify.app/api/placeholder/600/500 404 (Not Found)',
+                'https://myfitlifepro.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://myfitlifepro.netlify.app/api/placeholder/600/400 404 (Not Found)',
+                'https://myfitlifepro.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://coruscating-cat-3a8117.netlify.app/logo.svg 404 (Not Found)',
+                'https://coruscating-cat-3a8117.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://coruscating-cat-3a8117.netlify.app/hero-image.png 404 (Not Found)',
+                'https://coruscating-cat-3a8117.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'Blocked autofocusing on a <textarea> element in a cross-origin subframe',
+                'https://mindblitz.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'Uncaught Error: Minified React error #418; visit https://react.dev/errors/418?args[]= for the full message',
+                'https://mindblitz.netlify.app',
+                new Date().toISOString(),
+                'at rv (framework-b8ed9b642a1d405a.js:1:37940)\nat ot (framework-b8ed9b642a1d405a.js:1:82554)'
+            );
+            
+            window.errorCollection.addError(
+                'API Configuration Error: ZodError: Invalid API key length',
+                'https://zingy-griffin-2aaa95.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'CardHeader: card prop is required',
+                'https://zingy-griffin-2aaa95.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://anfeltssgrossctbwfwa.supabase.co/rest/v1/wishlists?select=*&order=created_at.desc net::ERR_NAME_NOT_RESOLVED',
+                'https://zingy-griffin-2aaa95.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://mujczvupgntycasubpqv.supabase.co/rest/v1/medications?select=*&user_id=eq.default-user&person_name=eq.Griffin net::ERR_NAME_NOT_RESOLVED',
+                'https://zingy-griffin-2aaa95.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://api.thenewsapi.com/v1/news/top?api_token=&locale=us&limit=10&categories=technology 401 (Unauthorized)',
+                'https://zingy-griffin-2aaa95.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'Access to fetch at https://pro-api.coingecko.com/api/v3/simple/price has been blocked by CORS policy: No Access-Control-Allow-Origin header is present on the requested resource',
+                'https://zingy-griffin-2aaa95.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'GET https://via.placeholder.com/40 net::ERR_NAME_NOT_RESOLVED',
+                'https://uiplaygrounddemure.netlify.app',
+                new Date().toISOString()
+            );
+            
+            window.errorCollection.addError(
+                'Uncaught (in promise) TypeError: Failed to execute addAll on Cache: Request failed',
+                'https://mindblitz.netlify.app',
+                new Date().toISOString()
+            );
+            
+            // Update the dashboard
+            updateErrorDashboard();
+            showDebugInfo('Loaded 18 sample errors from real site errors');
+        }
+        
+        // Initialize error collection with sample data
+        function initializeErrorCollection() {
+            console.log('Initializing error collection system');
+            
+            // Add a basic sample error to verify the system is working
+            setTimeout(() => {
+                if (window.errorCollection.getTotalCount() === 0) {
+                    // Add just one test error for now
+                    window.errorCollection.addError(
+                        'Error collection system initialized successfully - click "Load Sample Errors" to load real error examples',
+                        'dashboard-initialization',
+                        new Date().toISOString()
+                    );
+                    
+                    // Show a message that we're ready to load sample data
+                    showDebugInfo('Error collection system ready - click "Load Sample Errors" to populate with real error data');
+                }
+            }, 1000);
+        }
+        
         // Start initialization when document is loaded
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initialize);
+            document.addEventListener('DOMContentLoaded', () => {
+                initialize();
+                initializeErrorCollection();
+            });
         } else {
             initialize();
+            initializeErrorCollection();
         }
 
         // Refresh all iframes every 5 minutes to keep previews current
