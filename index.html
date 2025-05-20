@@ -905,6 +905,184 @@
         #debugInfo.active {
             display: block;
         }
+        
+        /* Debug Buttons */
+        .debug-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Error Dashboard */
+        .error-dashboard {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin-top: 1.5rem;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .error-dashboard.active {
+            display: block;
+        }
+        
+        .error-dashboard-header {
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .error-dashboard-header h4 {
+            margin: 0 0 0.75rem 0;
+            font-size: 1.1rem;
+            color: #06b6d4;
+        }
+        
+        .error-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .error-stat {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            background-color: #262626;
+            border-radius: 12px;
+            color: #94a3b8;
+        }
+        
+        .error-dashboard-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .error-tab {
+            padding: 0.5rem 1rem;
+            background-color: #262626;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .error-tab.active {
+            background-color: #06b6d4;
+            color: #fff;
+            border-color: #06b6d4;
+        }
+        
+        .error-dashboard-content {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .error-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .error-entry {
+            background-color: #262626;
+            border-radius: 6px;
+            padding: 0.75rem;
+            border-left: 3px solid #444;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        
+        .error-entry.resource-missing {
+            border-left-color: #eab308; /* Yellow */
+        }
+        
+        .error-entry.api-failure {
+            border-left-color: #ef4444; /* Red */
+        }
+        
+        .error-entry.cors-error {
+            border-left-color: #8b5cf6; /* Purple */
+        }
+        
+        .error-entry.warning {
+            border-left-color: #f59e0b; /* Amber */
+        }
+        
+        .error-entry-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+        
+        .error-source {
+            max-width: 50%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .error-message {
+            color: #f1f5f9;
+            margin-bottom: 0.75rem;
+            word-break: break-word;
+        }
+        
+        .error-stack {
+            font-size: 0.75rem;
+            color: #64748b;
+            white-space: pre-wrap;
+            margin-bottom: 0.75rem;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .error-stack.active {
+            display: block;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .error-actions button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            background-color: #333;
+            border: none;
+            border-radius: 4px;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        
+        .error-actions button:hover {
+            background-color: #444;
+            color: #fff;
+        }
+        
+        .error-copy-btn {
+            background-color: #1d4ed8 !important;
+            color: #fff !important;
+        }
+        
+        .error-ignore-btn {
+            background-color: #475569 !important;
+        }
+        
+        .error-fix-btn {
+            background-color: #059669 !important;
+            color: #fff !important;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -1015,12 +1193,59 @@
     
     <div class="debugging-tools" id="debuggingTools">
         <h3>Debugging Tools</h3>
-        <button class="debug-button" onclick="clearAllHidden()">Clear All Hidden Projects</button>
-        <button class="debug-button" onclick="resetLocalStorage()">Reset All Settings</button>
-        <button class="debug-button" onclick="exportSettings()">Export Settings</button>
-        <button class="debug-button" onclick="toggleErrorFiltering()">Toggle Error Filtering</button>
+        <div class="debug-buttons">
+            <button class="debug-button" onclick="clearAllHidden()">Clear All Hidden Projects</button>
+            <button class="debug-button" onclick="resetLocalStorage()">Reset All Settings</button>
+            <button class="debug-button" onclick="exportSettings()">Export Settings</button>
+            <button class="debug-button" onclick="toggleErrorFiltering()">Toggle Error Filtering</button>
+            <button class="debug-button" onclick="toggleErrorDashboard()">Toggle Error Dashboard</button>
+            <button class="debug-button" onclick="exportErrorLogs()">Export Error Logs</button>
+            <button class="debug-button" onclick="clearErrorLogs()">Clear Error Logs</button>
+        </div>
         <div id="debugInfo"></div>
+        
+        <!-- Error Dashboard -->
+        <div id="errorDashboard" class="error-dashboard">
+            <div class="error-dashboard-header">
+                <h4>Error Collection Dashboard</h4>
+                <div class="error-stats">
+                    <span class="error-stat" id="totalErrorCount">0 Total</span>
+                    <span class="error-stat" id="missingResourceCount">0 Missing Resources</span>
+                    <span class="error-stat" id="apiFailureCount">0 API Failures</span>
+                    <span class="error-stat" id="corsErrorCount">0 CORS Issues</span>
+                </div>
+                <div class="error-dashboard-tabs">
+                    <button class="error-tab active" data-tab="all">All Errors</button>
+                    <button class="error-tab" data-tab="resourceMissing">404/Missing</button>
+                    <button class="error-tab" data-tab="apiFailures">API Failures</button>
+                    <button class="error-tab" data-tab="corsErrors">CORS Issues</button>
+                    <button class="error-tab" data-tab="iframeErrors">iFrame Errors</button>
+                    <button class="error-tab" data-tab="warnings">Warnings</button>
+                </div>
+            </div>
+            <div class="error-dashboard-content">
+                <div id="errorList" class="error-list"></div>
+            </div>
+        </div>
     </div>
+    
+    <!-- Error entry template (hidden) -->
+    <template id="errorEntryTemplate">
+        <div class="error-entry">
+            <div class="error-entry-header">
+                <span class="error-source"></span>
+                <span class="error-timestamp"></span>
+                <span class="error-count"></span>
+            </div>
+            <div class="error-message"></div>
+            <div class="error-stack"></div>
+            <div class="error-actions">
+                <button class="error-copy-btn">Copy</button>
+                <button class="error-ignore-btn">Ignore</button>
+                <button class="error-fix-btn">Fix</button>
+            </div>
+        </div>
+    </template>
 
     <script>
         let projects = [];
@@ -1887,8 +2112,121 @@
             await loadProjects();
         }
         
-        // Error and console filtering
+        // Error collection and console filtering
         (function() {
+            // Error collection storage
+            window.errorCollection = {
+                errors: [],
+                warnings: [],
+                iframeErrors: [],
+                apiFailures: [],
+                resourceMissing: [],
+                corsErrors: [],
+                unknownErrors: [],
+                maxEntries: 1000, // Maximum number of entries per category
+                
+                // Add error to collection
+                addError: function(message, source, timestamp = new Date().toISOString(), stack = null) {
+                    // Categorize the error
+                    if (message.includes('404') || message.includes('Not Found')) {
+                        this.addToCategory('resourceMissing', { message, source, timestamp, stack });
+                    } else if (message.includes('CORS') || message.includes('Access-Control-Allow-Origin')) {
+                        this.addToCategory('corsErrors', { message, source, timestamp, stack });
+                    } else if (message.includes('net::ERR') || message.includes('Failed to fetch') || 
+                               message.includes('401') || message.includes('Unauthorized') ||
+                               message.includes('API')) {
+                        this.addToCategory('apiFailures', { message, source, timestamp, stack });
+                    } else if (source && source.includes('iframe')) {
+                        this.addToCategory('iframeErrors', { message, source, timestamp, stack });
+                    } else {
+                        this.addToCategory('errors', { message, source, timestamp, stack });
+                    }
+                },
+                
+                // Add warning to collection
+                addWarning: function(message, source, timestamp = new Date().toISOString()) {
+                    this.addToCategory('warnings', { message, source, timestamp });
+                },
+                
+                // Add to a specific category with limit check
+                addToCategory: function(category, entry) {
+                    if (!this[category]) {
+                        this[category] = [];
+                    }
+                    
+                    // Check if this exact error already exists
+                    const isDuplicate = this[category].some(item => 
+                        item.message === entry.message && item.source === entry.source
+                    );
+                    
+                    if (!isDuplicate) {
+                        // Limit the number of entries per category
+                        if (this[category].length >= this.maxEntries) {
+                            this[category].pop(); // Remove oldest
+                        }
+                        this[category].unshift(entry); // Add to beginning
+                    } else {
+                        // Update timestamp for existing entry
+                        const existingEntry = this[category].find(item => 
+                            item.message === entry.message && item.source === entry.source
+                        );
+                        if (existingEntry) {
+                            existingEntry.timestamp = entry.timestamp;
+                            existingEntry.count = (existingEntry.count || 1) + 1;
+                        }
+                    }
+                },
+                
+                // Get all errors in formatted JSON
+                getErrorsAsJson: function() {
+                    return JSON.stringify({
+                        timestamp: new Date().toISOString(),
+                        summary: {
+                            total: this.getTotalCount(),
+                            errors: this.errors.length,
+                            warnings: this.warnings.length,
+                            iframeErrors: this.iframeErrors.length,
+                            apiFailures: this.apiFailures.length,
+                            resourceMissing: this.resourceMissing.length,
+                            corsErrors: this.corsErrors.length,
+                            unknownErrors: this.unknownErrors.length
+                        },
+                        categories: {
+                            errors: this.errors,
+                            warnings: this.warnings,
+                            iframeErrors: this.iframeErrors,
+                            apiFailures: this.apiFailures, 
+                            resourceMissing: this.resourceMissing,
+                            corsErrors: this.corsErrors,
+                            unknownErrors: this.unknownErrors
+                        }
+                    }, null, 2);
+                },
+                
+                // Get total error count
+                getTotalCount: function() {
+                    return this.errors.length + 
+                           this.warnings.length + 
+                           this.iframeErrors.length + 
+                           this.apiFailures.length + 
+                           this.resourceMissing.length + 
+                           this.corsErrors.length + 
+                           this.unknownErrors.length;
+                },
+                
+                // Clear all errors
+                clearAll: function() {
+                    this.errors = [];
+                    this.warnings = [];
+                    this.iframeErrors = [];
+                    this.apiFailures = [];
+                    this.resourceMissing = [];
+                    this.corsErrors = [];
+                    this.unknownErrors = [];
+                    return 'All error logs cleared';
+                }
+            };
+            
             // Store original console methods
             const originalConsoleError = console.error;
             const originalConsoleWarn = console.warn;
@@ -1906,36 +2244,66 @@
                 }
             };
             
+            // Get iframe source information
+            function getIframeSource(errorText) {
+                // Extract URL from error message if possible
+                const urlMatch = errorText.match(/https?:\/\/[^\s"')]+/g);
+                if (urlMatch && urlMatch.length > 0) {
+                    return urlMatch[0];
+                }
+                
+                // Try to find an iframe reference
+                for (const src of Object.keys(window.loadedIframeSources || {})) {
+                    if (errorText.includes(src)) {
+                        return src;
+                    }
+                }
+                
+                return 'unknown-iframe';
+            }
+            
             // Override console.error
             console.error = function() {
                 const args = Array.from(arguments);
                 const errorText = args.join(' ');
+                let source = 'console.error';
+                let shouldCollect = true;
                 
-                // Only filter if enabled
-                if (isErrorFilteringEnabled) {
-                    // Filter out chrome-extension errors
-                    if (errorText.includes('chrome-extension://') || 
-                        errorText.includes('extension.js') || 
-                        errorText.includes('extension/') ||
-                        errorText.includes('extensionState.js') ||
-                        errorText.includes('completion_list.html')) {
-                        // Silently ignore these errors
-                        return;
+                // Determine source based on error text
+                if (errorText.includes('http')) {
+                    source = getIframeSource(errorText);
+                }
+                
+                // Handle different error types
+                if (errorText.includes('chrome-extension://') || 
+                    errorText.includes('extension.js') || 
+                    errorText.includes('extension/') ||
+                    errorText.includes('extensionState.js') ||
+                    errorText.includes('completion_list.html')) {
+                    // Chrome extension errors - don't collect or display
+                    shouldCollect = false;
+                    if (isErrorFilteringEnabled) {
+                        return; // Don't pass through
                     }
-                    
-                    // Filter out common API failures from embedded sites
-                    if (errorText.includes('ERR_NAME_NOT_RESOLVED') ||
-                        errorText.includes('Failed to fetch') ||
-                        errorText.includes('NetworkError') ||
-                        errorText.includes('net::ERR') ||
-                        errorText.includes('401 (Unauthorized)') ||
-                        errorText.includes('404 (Not Found)') ||
-                        errorText.includes('API key') ||
-                        errorText.includes('blocked by CORS')) {
-                        // Just log a summarized version
+                } else if (errorText.includes('ERR_NAME_NOT_RESOLVED') ||
+                           errorText.includes('Failed to fetch') ||
+                           errorText.includes('NetworkError') ||
+                           errorText.includes('net::ERR') ||
+                           errorText.includes('401 (Unauthorized)') ||
+                           errorText.includes('404 (Not Found)') ||
+                           errorText.includes('API key') ||
+                           errorText.includes('blocked by CORS')) {
+                    // API and resource errors - collect but maybe don't display
+                    window.errorCollection.addError(errorText, source);
+                    if (isErrorFilteringEnabled) {
                         console.log('[Embedded site API error - suppressed]');
                         return;
                     }
+                }
+                
+                // Collect other errors
+                if (shouldCollect) {
+                    window.errorCollection.addError(errorText, source);
                 }
                 
                 // Pass through all other errors
@@ -1946,36 +2314,61 @@
             console.warn = function() {
                 const args = Array.from(arguments);
                 const warnText = args.join(' ');
+                let source = 'console.warn';
+                let shouldCollect = true;
                 
-                // Only filter if enabled
-                if (isErrorFilteringEnabled) {
-                    // Filter out extension-related warnings
-                    if (warnText.includes('chrome-extension://') || 
-                        warnText.includes('extension.js') ||
-                        warnText.includes('extension/') ||
-                        warnText.includes('The message port closed')) {
-                        // Silently ignore these warnings
-                        return;
+                // Determine source based on warning text
+                if (warnText.includes('http')) {
+                    source = getIframeSource(warnText);
+                }
+                
+                // Filter and collect warnings
+                if (warnText.includes('chrome-extension://') || 
+                    warnText.includes('extension.js') ||
+                    warnText.includes('extension/') ||
+                    warnText.includes('The message port closed')) {
+                    // Extension warnings - don't collect or display
+                    shouldCollect = false;
+                    if (isErrorFilteringEnabled) {
+                        return; // Don't pass through
                     }
-                    
-                    // Filter iframe sandbox warnings
-                    if (warnText.includes('Blocked autofocusing') ||
-                        warnText.includes('sandbox') ||
-                        warnText.includes('frame')) {
-                        return;
+                } else if (warnText.includes('Blocked autofocusing') ||
+                           warnText.includes('sandbox') ||
+                           warnText.includes('frame')) {
+                    // Iframe warnings - collect but maybe don't display
+                    window.errorCollection.addWarning(warnText, source);
+                    if (isErrorFilteringEnabled) {
+                        return; // Don't pass through
                     }
+                }
+                
+                // Collect other warnings
+                if (shouldCollect) {
+                    window.errorCollection.addWarning(warnText, source);
                 }
                 
                 // Pass through all other warnings
                 originalConsoleWarn.apply(console, args);
             };
             
+            // Track iframe sources that are loaded
+            window.loadedIframeSources = {};
+            
             // Handle errors from iframes
             window.addEventListener('error', function(e) {
-                // Only filter if enabled
-                if (isErrorFilteringEnabled) {
-                    // If the error is from an iframe, prevent it from bubbling up
-                    if (e.target && (e.target.tagName === 'IFRAME' || e.target.nodeName === 'IFRAME')) {
+                // Collect the error
+                if (e.target && (e.target.tagName === 'IFRAME' || e.target.nodeName === 'IFRAME')) {
+                    const source = e.target.src || 'unknown-iframe';
+                    window.loadedIframeSources[source] = true;
+                    window.errorCollection.addError(
+                        e.message || 'Iframe error',
+                        source,
+                        new Date().toISOString(),
+                        e.error?.stack || null
+                    );
+                    
+                    // Only filter if enabled
+                    if (isErrorFilteringEnabled) {
                         console.log('[Embedded site error suppressed]');
                         e.preventDefault();
                         e.stopPropagation();
@@ -1984,19 +2377,62 @@
                 }
             }, true); // Capture phase
             
+            // Track iframe loads for better source attribution
+            document.addEventListener('DOMContentLoaded', function() {
+                setInterval(() => {
+                    const iframes = document.querySelectorAll('iframe');
+                    iframes.forEach(iframe => {
+                        if (iframe.src) {
+                            window.loadedIframeSources[iframe.src] = true;
+                        }
+                    });
+                }, 2000);
+            });
+            
             // Suppress unhandled promise rejections from iframes
             window.addEventListener('unhandledrejection', function(e) {
-                // Only filter if enabled
-                if (isErrorFilteringEnabled) {
-                    // Check if the rejection is from an iframe resource
-                    if (e.reason && (
-                        (e.reason.message && e.reason.message.includes('http')) ||
-                        (e.reason.stack && e.reason.stack.includes('http'))
-                    )) {
-                        console.log('[Embedded site promise rejection suppressed]');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
+                // Check if the rejection is from an iframe resource
+                if (e.reason) {
+                    let source = 'unhandled-promise';
+                    let message = 'Unknown promise rejection';
+                    
+                    if (typeof e.reason === 'string') {
+                        message = e.reason;
+                    } else if (e.reason.message) {
+                        message = e.reason.message;
+                        
+                        // Try to determine source
+                        if (e.reason.stack && e.reason.stack.includes('http')) {
+                            const stackLines = e.reason.stack.split('\n');
+                            for (const line of stackLines) {
+                                if (line.includes('http')) {
+                                    const match = line.match(/https?:\/\/[^\s"')]+/g);
+                                    if (match && match.length) {
+                                        source = match[0];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Collect the error
+                    window.errorCollection.addError(
+                        message,
+                        source,
+                        new Date().toISOString(),
+                        e.reason.stack || null
+                    );
+                    
+                    // Only filter if enabled
+                    if (isErrorFilteringEnabled) {
+                        if ((e.reason.message && e.reason.message.includes('http')) ||
+                            (e.reason.stack && e.reason.stack.includes('http'))) {
+                            console.log('[Embedded site promise rejection suppressed]');
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return false;
+                        }
                     }
                 }
             });
@@ -2006,6 +2442,309 @@
         function toggleErrorFiltering() {
             const enabled = window.errorFilteringState.toggleFiltering();
             showDebugInfo(`Error filtering ${enabled ? 'enabled' : 'disabled'}`);
+        }
+        
+        // Toggle error dashboard
+        function toggleErrorDashboard() {
+            const dashboard = document.getElementById('errorDashboard');
+            dashboard.classList.toggle('active');
+            
+            if (dashboard.classList.contains('active')) {
+                updateErrorDashboard();
+                // Set up auto-refresh
+                if (!window.errorDashboardInterval) {
+                    window.errorDashboardInterval = setInterval(updateErrorDashboard, 5000);
+                }
+            } else {
+                // Clear auto-refresh
+                if (window.errorDashboardInterval) {
+                    clearInterval(window.errorDashboardInterval);
+                    window.errorDashboardInterval = null;
+                }
+            }
+        }
+        
+        // Update error dashboard with current error data
+        function updateErrorDashboard() {
+            // Update stats
+            document.getElementById('totalErrorCount').textContent = `${window.errorCollection.getTotalCount()} Total`;
+            document.getElementById('missingResourceCount').textContent = `${window.errorCollection.resourceMissing?.length || 0} Missing Resources`;
+            document.getElementById('apiFailureCount').textContent = `${window.errorCollection.apiFailures?.length || 0} API Failures`;
+            document.getElementById('corsErrorCount').textContent = `${window.errorCollection.corsErrors?.length || 0} CORS Issues`;
+            
+            // Get active tab
+            const activeTab = document.querySelector('.error-tab.active');
+            const tabName = activeTab ? activeTab.dataset.tab : 'all';
+            
+            // Render errors based on tab
+            renderErrorList(tabName);
+        }
+        
+        // Switch tabs in error dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.error-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    // Render error list for this tab
+                    renderErrorList(this.dataset.tab);
+                });
+            });
+        });
+        
+        // Render error list based on selected category
+        function renderErrorList(category) {
+            const errorList = document.getElementById('errorList');
+            errorList.innerHTML = '';
+            
+            let errors = [];
+            
+            // Get errors based on category
+            if (category === 'all') {
+                // Combine all categories, prioritizing 404s and CORS errors
+                errors = [
+                    ...(window.errorCollection.resourceMissing || []),
+                    ...(window.errorCollection.corsErrors || []),
+                    ...(window.errorCollection.apiFailures || []),
+                    ...(window.errorCollection.iframeErrors || []),
+                    ...(window.errorCollection.errors || []),
+                    ...(window.errorCollection.warnings || [])
+                ];
+            } else {
+                errors = window.errorCollection[category] || [];
+            }
+            
+            if (errors.length === 0) {
+                errorList.innerHTML = '<div class="no-errors">No errors in this category</div>';
+                return;
+            }
+            
+            // Render each error
+            const template = document.getElementById('errorEntryTemplate');
+            errors.forEach((error, index) => {
+                const clone = template.content.cloneNode(true);
+                
+                // Set CSS class based on type
+                const entry = clone.querySelector('.error-entry');
+                if (window.errorCollection.resourceMissing?.includes(error)) {
+                    entry.classList.add('resource-missing');
+                } else if (window.errorCollection.apiFailures?.includes(error)) {
+                    entry.classList.add('api-failure');
+                } else if (window.errorCollection.corsErrors?.includes(error)) {
+                    entry.classList.add('cors-error');
+                } else if (window.errorCollection.warnings?.includes(error)) {
+                    entry.classList.add('warning');
+                }
+                
+                // Set error data
+                clone.querySelector('.error-source').textContent = error.source || 'Unknown';
+                clone.querySelector('.error-timestamp').textContent = new Date(error.timestamp).toLocaleTimeString();
+                
+                if (error.count && error.count > 1) {
+                    clone.querySelector('.error-count').textContent = `${error.count}x`;
+                }
+                
+                clone.querySelector('.error-message').textContent = error.message;
+                
+                // Add stack trace if available
+                const stackEl = clone.querySelector('.error-stack');
+                if (error.stack) {
+                    stackEl.textContent = error.stack;
+                    
+                    // Add click to toggle stack trace
+                    clone.querySelector('.error-message').style.cursor = 'pointer';
+                    clone.querySelector('.error-message').addEventListener('click', function() {
+                        stackEl.classList.toggle('active');
+                    });
+                }
+                
+                // Set up action buttons
+                clone.querySelector('.error-copy-btn').addEventListener('click', function() {
+                    const fullError = `${error.message}\nSource: ${error.source}\nTimestamp: ${error.timestamp}${error.stack ? '\nStack: ' + error.stack : ''}`;
+                    navigator.clipboard.writeText(fullError);
+                    showDebugInfo('Error copied to clipboard');
+                });
+                
+                clone.querySelector('.error-ignore-btn').addEventListener('click', function() {
+                    // Add to ignored errors
+                    if (!window.errorCollection.ignoredErrors) {
+                        window.errorCollection.ignoredErrors = [];
+                    }
+                    window.errorCollection.ignoredErrors.push({
+                        source: error.source,
+                        message: error.message
+                    });
+                    
+                    // Remove from collection
+                    const categories = ['errors', 'warnings', 'iframeErrors', 'apiFailures', 'resourceMissing', 'corsErrors'];
+                    categories.forEach(cat => {
+                        if (window.errorCollection[cat]) {
+                            window.errorCollection[cat] = window.errorCollection[cat].filter(e => 
+                                e.message !== error.message || e.source !== error.source
+                            );
+                        }
+                    });
+                    
+                    // Update dashboard
+                    updateErrorDashboard();
+                    showDebugInfo(`Error from ${error.source} ignored`);
+                });
+                
+                clone.querySelector('.error-fix-btn').addEventListener('click', function() {
+                    // Generate fix instructions
+                    const errorUrl = error.source;
+                    const instructions = generateFixInstructions(error);
+                    
+                    // Show in debug info
+                    showDebugInfo(instructions);
+                    
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(instructions);
+                    alert('Fix instructions copied to clipboard');
+                });
+                
+                errorList.appendChild(clone);
+            });
+        }
+        
+        // Generate instructions for fixing errors
+        function generateFixInstructions(error) {
+            const source = error.source;
+            const message = error.message;
+            let instructions = "";
+            
+            // 404 errors for images
+            if ((message.includes('404') || message.includes('Not Found')) && 
+                (message.includes('.png') || message.includes('.jpg') || message.includes('.svg'))) {
+                const fileName = message.match(/\/([^\/]+\.(png|jpg|svg))/i);
+                if (fileName) {
+                    instructions = `
+Fix for 404 (Not Found) error on image: ${fileName[1]}
+Site: ${source}
+
+Edit the site's repository:
+1. Add the missing image file to the images or assets directory
+2. If this is a demo site, create a placeholder image:
+   - Create a new file in the repository: public/images/${fileName[1]}
+   - Use a placeholder service or create a basic SVG image
+
+Example HTML fix:
+<img src="/images/${fileName[1]}" alt="Image" onerror="this.src='/placeholder.png'; this.onerror=null;">
+
+Example CSS fix:
+.element-with-background {
+  background-image: url('/images/${fileName[1]}'), url('/placeholder.png');
+}
+                    `;
+                }
+            }
+            // API errors
+            else if (message.includes('API key') || message.includes('Unauthorized')) {
+                instructions = `
+Fix for API key error on: ${source}
+Error: ${message}
+
+1. Create mock data to replace the API:
+   - Add a local JSON file with sample data
+   - Replace the API call with local data
+   
+2. Example fix:
+   // Before:
+   fetch('${source}')
+     .then(res => res.json())
+     .then(data => updateUI(data));
+   
+   // After:
+   // First try the API, fall back to local mock data
+   fetch('${source}')
+     .catch(err => {
+       console.log('Using mock data instead of API');
+       return { json: () => mockData };
+     })
+     .then(res => res.json())
+     .then(data => updateUI(data));
+   
+   // Add this at the top of your file:
+   const mockData = {
+     // Your mock data structure here
+   };
+                `;
+            }
+            // CORS errors
+            else if (message.includes('CORS') || message.includes('Access-Control-Allow-Origin')) {
+                instructions = `
+Fix for CORS error on: ${source}
+Error: ${message}
+
+Options:
+1. Enable CORS on your API (if you control it):
+   - Add the following header to your server responses:
+   Access-Control-Allow-Origin: *
+   
+2. Use a CORS proxy for development (not for production):
+   - Modify the fetch URL to use a CORS proxy:
+   
+   // Before:
+   fetch('${source}')
+   
+   // After:
+   fetch('https://cors-anywhere.herokuapp.com/${source}')
+   
+3. Use a local proxy server in your Netlify config (toml file):
+   [[redirects]]
+     from = "/api/*"
+     to = "${source}"
+     status = 200
+     force = true
+                `;
+            }
+            // Other errors
+            else {
+                instructions = `
+Error detected on: ${source}
+Error message: ${message}
+
+Possible fixes:
+1. If this is an API failure, implement error handling:
+   try {
+     // Your existing code
+   } catch (err) {
+     console.log('Error handled:', err);
+     // Fallback behavior
+   }
+
+2. If this is a script error, check for:
+   - Missing dependencies
+   - Script loading order
+   - Browser compatibility issues
+   - Resource load timing
+                `;
+            }
+            
+            return instructions;
+        }
+        
+        // Export error logs
+        function exportErrorLogs() {
+            const errorData = window.errorCollection.getErrorsAsJson();
+            const blob = new Blob([errorData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `error-logs-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showDebugInfo('Error logs exported to JSON file');
+        }
+        
+        // Clear error logs
+        function clearErrorLogs() {
+            window.errorCollection.clearAll();
+            updateErrorDashboard();
+            showDebugInfo('Error logs cleared');
         }
         
         // Start initialization when document is loaded
