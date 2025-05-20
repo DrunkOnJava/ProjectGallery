@@ -1306,6 +1306,7 @@
 
         // Determine optimal size based on project characteristics
         function determineOptimalSize(project) {
+            // MOST IMPORTANT: Always respect manually saved sizes first
             const savedState = projectStates[project.name];
             if (savedState && savedState.size) {
                 return savedState.size; // Use saved size preference
@@ -1316,33 +1317,31 @@
                 return 'large';
             }
 
-            // Check if it's suitable for tiny
+            // Check if it's explicitly listed for tiny size
             if (tinyProjects.includes(project.name)) {
                 return 'tiny';
             }
 
-            // Randomize for variety with weighted distribution
-            const sizeWeights = {
-                tiny: 0.10,
-                small: 0.15,
-                medium: 0.20,
-                tall: 0.15,
-                wide: 0.15,
-                large: 0.20,
-                xlarge: 0.05
-            };
-
-            const random = Math.random();
-            let cumulative = 0;
+            // Create a deterministic size based on project name hash
+            // This ensures the same project always gets the same size
+            // regardless of when the gallery is loaded
+            const nameHash = hashString(project.name);
             
-            for (const [size, weight] of Object.entries(sizeWeights)) {
-                cumulative += weight;
-                if (random <= cumulative) {
-                    return size;
-                }
+            // For remaining projects, use a consistent size based on name hash
+            // Distribute across size categories based on modulo
+            const sizes = ['small', 'medium', 'tall', 'wide', 'large', 'small', 'medium'];
+            const sizeMod = nameHash % sizes.length;
+            return sizes[sizeMod];
+        }
+        
+        // Simple string hash function for deterministic sizing
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash = hash & hash; // Convert to 32bit integer
             }
-
-            return 'medium'; // fallback
+            return Math.abs(hash);
         }
 
         // Embedded site data to avoid CORS issues
@@ -1884,56 +1883,51 @@
                 );
             }
             
-            // Complete rewrite of the card distribution algorithm
-            const sizeOrder = { xlarge: 0, large: 1, medium: 2, small: 3, tiny: 4 };
+            // Deterministic card layout algorithm - ensures consistent grid each page load
+            // Use a stable sorting algorithm based on name rather than random distribution
+            
+            // First, separate featured projects - these always come first
             let featuredProjects = filteredProjects.filter(p => p.featured);
             let regularProjects = filteredProjects.filter(p => !p.featured);
             
-            // FORCE an even distribution with precise placement of icons
-            let allItems = [];
+            // Sort by name to ensure stable ordering on every page load
+            featuredProjects.sort((a, b) => a.name.localeCompare(b.name));
+            regularProjects.sort((a, b) => a.name.localeCompare(b.name));
+            filteredIcons.sort((a, b) => a.name.localeCompare(b.name));
             
-            // Add featured projects first
-            if (featuredProjects.length > 0) {
-                allItems.push(...featuredProjects);
+            // Initialize the final array with featured projects
+            let allItems = [...featuredProjects];
+            
+            // Helper function to determine optimal item placement for grid flow
+            const itemsPerRow = Math.floor(window.innerWidth / 300); // Approximate calculation
+            const totalRegularAndIcons = regularProjects.length + filteredIcons.length;
+            
+            // Instead of random distribution, we'll use a fixed pattern 
+            // that intelligently places icons to minimize empty spaces
+            
+            // First, inject first icon after 2 featured projects (if they exist)
+            // This ensures icons are visible near the top
+            if (filteredIcons.length > 0 && allItems.length >= 2) {
+                allItems.splice(2, 0, filteredIcons[0]);
+                filteredIcons = filteredIcons.slice(1);
             }
             
-            // For truly interleaving icons with projects, we'll place an icon
-            // every N projects, where N depends on the ratio of icons to projects
-            if (filteredIcons.length > 0 && regularProjects.length > 0) {
-                // Calculate ideal spacing - place one icon every X projects
-                // At minimum, place an icon after every 3 projects, even if we run out
-                const iconSpacing = Math.max(1, Math.min(3, Math.floor(regularProjects.length / filteredIcons.length)));
+            // Then follow a deterministic pattern for the rest:
+            // - Regular projects in groups of 3
+            // - Place icons strategically after each group
+            let regularIndex = 0;
+            let iconIndex = 0;
+            
+            while (regularIndex < regularProjects.length || iconIndex < filteredIcons.length) {
+                // Add a block of 3 regular projects (or as many as available)
+                for (let i = 0; i < 3 && regularIndex < regularProjects.length; i++) {
+                    allItems.push(regularProjects[regularIndex++]);
+                }
                 
-                // Create the interleaved array
-                let iconIndex = 0;
-                let projectIndex = 0;
-                
-                // Start with an icon to ensure they're visible near the top
-                if (filteredIcons.length > 0) {
+                // Add an icon if available
+                if (iconIndex < filteredIcons.length) {
                     allItems.push(filteredIcons[iconIndex++]);
                 }
-                
-                // Add projects with icons interspersed
-                while (projectIndex < regularProjects.length) {
-                    // Add 'iconSpacing' number of projects
-                    for (let i = 0; i < iconSpacing && projectIndex < regularProjects.length; i++) {
-                        allItems.push(regularProjects[projectIndex++]);
-                    }
-                    
-                    // Add an icon if available
-                    if (iconIndex < filteredIcons.length) {
-                        allItems.push(filteredIcons[iconIndex++]);
-                    }
-                }
-                
-                // Add any remaining icons at the end if there are any left
-                while (iconIndex < filteredIcons.length) {
-                    allItems.push(filteredIcons[iconIndex++]);
-                }
-            } else {
-                // If no icons or no regular projects, just add whatever is available
-                allItems.push(...regularProjects);
-                allItems.push(...filteredIcons);
             }
             
             // Mark items with their type for CSS
