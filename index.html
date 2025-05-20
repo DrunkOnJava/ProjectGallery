@@ -1983,7 +1983,7 @@
                              onclick="${selectMode ? `toggleCardSelection('${item.name}')` : ''}">
                             <button class="remove-button" onclick="event.stopPropagation(); removeProject('${item.name}')" title="Remove from gallery">×</button>
                             <div class="image-container">
-                                ${item.useLivePreview && item.status === 'success' ? 
+                                ${item.useLivePreview && item.status === 'success' && !window.disableLivePreviews ? 
                                     `<div class="iframe-loading">⟳</div>
                                      <iframe 
                                         src="${item.url}" 
@@ -2966,14 +2966,31 @@ Possible fixes:
             document.addEventListener('DOMContentLoaded', () => {
                 initialize();
                 initializeErrorCollection();
+                
+                // After initial page load, disable live previews to improve performance
+                setTimeout(() => {
+                    window.disableLivePreviews = true;
+                    console.log('Live previews disabled after initial load for better performance');
+                    renderGallery(); // Re-render to apply the change
+                }, 5000); // 5 second delay to allow initial iframes to load
             });
         } else {
             initialize();
             initializeErrorCollection();
+            
+            // After initial page load, disable live previews to improve performance
+            setTimeout(() => {
+                window.disableLivePreviews = true;
+                console.log('Live previews disabled after initial load for better performance');
+                renderGallery(); // Re-render to apply the change
+            }, 5000); // 5 second delay to allow initial iframes to load
         }
 
-        // Refresh all iframes every 5 minutes to keep previews current
+        // Refresh all iframes every 5 minutes to keep previews current (if not disabled)
         setInterval(() => {
+            // Skip refreshing if live previews have been disabled
+            if (window.disableLivePreviews) return;
+            
             projects.forEach((project, index) => {
                 if (project.useLivePreview) {
                     const iframe = document.getElementById(`iframe-${index}`);
